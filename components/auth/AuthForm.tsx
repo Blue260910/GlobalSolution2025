@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  TouchableOpacity,
 } from 'react-native';
 
 import { useForm, Controller } from 'react-hook-form';
@@ -16,6 +17,46 @@ import { Mail, Lock, UserRound } from 'lucide-react-native';
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 import { theme } from '@/lib/theme';
+import { on } from 'events';
+
+
+const step1Schemas = [
+  z.object({
+    completeName: z.string().min(3, 'Nome completo obrigatório'),
+    telephone: z.string().min(10, 'Telefone obrigatório'),
+    address: z.string().min(5, 'Endereço obrigatório'),
+  })
+];
+
+const step2Schemas = [
+  z.object({
+    nickname: z.string().min(3, 'Apelido obrigatório'),
+  })
+];
+
+const step3Schemas = [
+  z.object({
+    email: z.string().email('Email inválido'),
+    password: z.string().min(6, 'Senha obrigatória'),
+    confirmPassword: z.string().min(6, 'Confirme a senha'),
+  }).refine(data => data.password === data.confirmPassword, {
+    path: ['confirmPassword'],
+    message: 'As senhas não coincidem',
+  }),
+];
+
+
+const step1submit = (onSubmit: (data: any) => void) => {
+  return (data: any) => {
+    const step1Data = {
+      completeName: data.completeName,
+      telephone: data.telephone,
+      address: data.address,
+    };
+
+    onSubmit(step1Data);
+  };
+}
 
 interface AuthFormProps {
   type: 'login' | 'register' | 'reset';
@@ -43,8 +84,13 @@ export const AuthForm: React.FC<AuthFormProps> = ({
       password: '',
       confirmPassword: '',
       nickname: '',
+      completeName: '',
+      telephone: '',
+      address: '',
     },
   });
+
+  const [step, setStep] = useState(1);
 
   // Form configuration based on type
   const formConfig = {
@@ -58,7 +104,16 @@ export const AuthForm: React.FC<AuthFormProps> = ({
       title: 'Create Account',
       subtitle: 'Sign up for a new account',
       buttonText: 'Create Account',
-      fields: ['email', 'password', 'confirmPassword', 'nickname'],
+      fields: [
+        'email',
+        'password',
+        'confirmPassword',
+        'nickname',
+        'completeName',
+        'telephone',
+        'address',
+        'profileImage',
+      ],
     },
     reset: {
       title: 'Reset Password',
@@ -68,45 +123,30 @@ export const AuthForm: React.FC<AuthFormProps> = ({
     },
   }[type];
 
-  return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
-      keyboardVerticalOffset={-120}
-    >
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={styles.formContainer}>
-        <View style={styles.header}>
-          <Text style={styles.title}>{formConfig.title}</Text>
-          <Text style={styles.subtitle}>{formConfig.subtitle}</Text>
-        </View>
-
-        {error && (
-          <View style={styles.errorContainer}>
-            <Text style={styles.errorText}>{error}</Text>
+  // NOVO: Mostrar todos os campos de login direto, sem steps
+  if (type === 'login') {
+    return (
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
+        keyboardVerticalOffset={-120}
+      >
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          style={styles.formContainer}
+        >
+          <View style={styles.header}>
+            <Text style={styles.title}>{formConfig.title}</Text>
+            <Text style={styles.subtitle}>{formConfig.subtitle}</Text>
           </View>
-        )}
 
-        <View style={styles.form}>
-          {formConfig.fields.includes('nickname') && (
-            <Controller
-              control={control}
-              name="nickname"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input
-                  label="Como gostaria de ser chamado?"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  placeholder="Algum apelido?"
-                  error={errors.nickname?.message?.toString()}
-                  icon={<UserRound size={20} color={theme.colors.neutrals[500]} />}
-                  returnKeyType="done"
-                />
-              )}
-            />
+          {error && (
+            <View style={styles.errorContainer}>
+              <Text style={styles.errorText}>{error}</Text>
+            </View>
           )}
 
-          {formConfig.fields.includes('email') && (
+          <View style={styles.form}>
             <Controller
               control={control}
               name="email"
@@ -125,57 +165,237 @@ export const AuthForm: React.FC<AuthFormProps> = ({
                 />
               )}
             />
-          )}
-
-          {formConfig.fields.includes('password') && (
             <Controller
               control={control}
               name="password"
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input
-                  label="Password"
+                  label="Senha"
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
-                  placeholder="Your password"
+                  placeholder="Sua senha"
                   secureTextEntry
                   error={errors.password?.message?.toString()}
-                  icon={<Lock size={20} color={theme.colors.neutrals[500]} />}
-                  returnKeyType={type === 'login' ? 'done' : 'next'}
-                />
-              )}
-            />
-          )}
-
-          {formConfig.fields.includes('confirmPassword') && (
-            <Controller
-              control={control}
-              name="confirmPassword"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input
-                  label="Confirm Password"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  placeholder="Confirm password"
-                  secureTextEntry
-                  error={errors.confirmPassword?.message?.toString()}
                   icon={<Lock size={20} color={theme.colors.neutrals[500]} />}
                   returnKeyType="done"
                 />
               )}
             />
-          )}
+            <Button
+              title={formConfig.buttonText}
+              onPress={handleSubmit(onSubmit)}
+              loading={isLoading}
+              fullWidth
+              size="lg"
+              style={styles.button}
+            />
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    );
+  }
 
-          <Button
-            title={formConfig.buttonText}
-            onPress={handleSubmit(onSubmit)}
-            loading={isLoading}
-            fullWidth
-            size="lg"
-            style={styles.button}
-          />
+  return (
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
+      keyboardVerticalOffset={-120}
+    >
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        style={styles.formContainer}
+      >
+        <View style={styles.header}>
+          <Text style={styles.title}>{formConfig.title}</Text>
+          <Text style={styles.subtitle}>{formConfig.subtitle}</Text>
         </View>
+
+        {error && (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>{error}</Text>
+          </View>
+        )}
+        {step === 1 && (
+          <View style={styles.form}>
+            {formConfig.fields.includes('completeName') && (
+              <Controller
+                control={control}
+                name="completeName"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input
+                    label="Qual seu nome completo?"
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    placeholder="Seu nome completo"
+                    error={errors.completeName?.message?.toString()}
+                    icon={
+                      <UserRound size={20} color={theme.colors.neutrals[500]} />
+                    }
+                    returnKeyType="done"
+                  />
+                )}
+              />
+            )}
+
+            {formConfig.fields.includes('telephone') && (
+              <Controller
+                control={control}
+                name="telephone"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input
+                    label="Telefone"
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    placeholder="(XX) XXXXX-XXXX"
+                    keyboardType="phone-pad"
+                    autoCapitalize="none"
+                    error={errors.telephone?.message?.toString()}
+                    icon={<Mail size={20} color={theme.colors.neutrals[500]} />}
+                    returnKeyType="next"
+                  />
+                )}
+              />
+            )}
+
+            {formConfig.fields.includes('address') && (
+              <Controller
+                control={control}
+                name="address"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input
+                    label="Endereço"
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    placeholder="Seu endereço"
+                    error={errors.address?.message?.toString()}
+                    icon={<Lock size={20} color={theme.colors.neutrals[500]} />}
+                    returnKeyType="done"
+                  />
+                )}
+              />
+            )}
+
+            <Button
+              title={formConfig.buttonText}
+              onPress={handleSubmit(step1submit(onSubmit))}
+              loading={isLoading}
+              fullWidth
+              size="lg"
+              style={styles.button}
+            />
+          </View>
+        )}
+        {step === 2 && (
+          <View style={styles.form}>
+            {formConfig.fields.includes('nickname') && (
+              <Controller
+                control={control}
+                name="nickname"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input
+                    label="Nick Name"
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    placeholder="Your nick name"
+                    error={errors.nickname?.message?.toString()}
+                    icon={
+                      <UserRound size={20} color={theme.colors.neutrals[500]} />
+                    }
+                    returnKeyType="done"
+                  />
+                )}
+              />
+            )}
+
+            <Button
+              title="Submit"
+              onPress={setStep.bind(null, 3)}
+              loading={isLoading}
+              fullWidth
+              size="lg"
+              style={styles.button}
+            />
+          </View>
+        )}
+
+        {step === 3 && (
+          <View style={styles.form}>
+            {formConfig.fields.includes('email') && (
+              <Controller
+                control={control}
+                name="email"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input
+                    label="Email"
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    placeholder="example@email.com"
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    error={errors.email?.message?.toString()}
+                    icon={<Mail size={20} color={theme.colors.neutrals[500]} />}
+                    returnKeyType="next"
+                  />
+                )}
+              />
+            )}
+
+            {formConfig.fields.includes('password') && (
+              <Controller
+                control={control}
+                name="password"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input
+                    label="Password"
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    placeholder="Your password"
+                    secureTextEntry
+                    error={errors.password?.message?.toString()}
+                    icon={<Lock size={20} color={theme.colors.neutrals[500]} />}
+                    returnKeyType="done"
+                  />
+                )}
+              />
+            )}
+
+            {formConfig.fields.includes('confirmPassword') && (
+              <Controller
+                control={control}
+                name="confirmPassword"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input
+                    label="Confirm Password"
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    placeholder="Confirm password"
+                    secureTextEntry
+                    error={errors.confirmPassword?.message?.toString()}
+                    icon={<Lock size={20} color={theme.colors.neutrals[500]} />}
+                    returnKeyType="done"
+                  />
+                )}
+              />
+            )}
+
+            <Button
+              title={formConfig.buttonText}
+              onPress={handleSubmit(onSubmit)}
+              loading={isLoading}
+              fullWidth
+              size="lg"
+              style={styles.button}
+            />
+          </View>
+        )}
       </ScrollView>
     </KeyboardAvoidingView>
   );

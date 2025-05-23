@@ -13,6 +13,6 @@ export default function Index() {
   return session ? (
     <Redirect href="/(app)" />
   ) : (
-    <Redirect href="/(auth)/login" />
+    <Redirect href="/(auth)/onboarding" />
   );
 }
