@@ -12,8 +12,8 @@ import { useEffect } from 'react';
 import { StockSearchModal } from '../../components/ui/StockSearchModal';
 import { useState } from 'react';
 
-
-
+import WeatherCard from '../../components/WeatherCard';
+import { weatherMetrics } from '../../components/data/weatherData';
 
 
 
@@ -80,6 +80,19 @@ export default function HomeScreen() {
               <Bell size={24} color={theme.colors.neutrals[800]} />
             </TouchableOpacity>
           </View>
+        </View>
+
+
+        <View style={styles.cardsContainer}>
+          {weatherMetrics.map((metric, index) => (
+            <Animated.View 
+              key={metric.id} 
+              entering={FadeInDown.delay(index * 200).springify()}
+              style={styles.cardWrapper}
+            >
+              <WeatherCard data={metric} />
+            </Animated.View>
+          ))}
         </View>
 
       </ScrollView>
@@ -172,6 +185,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.4)',
     height: 150,
     justifyContent: 'center',
+  },
+    cardsContainer: {
+    padding: 16,
+    gap: 16,
+  },
+  cardWrapper: {
+    width: '100%',
   },
   bannerTitle: {
     fontFamily: theme.typography.fontFamily.bold,
