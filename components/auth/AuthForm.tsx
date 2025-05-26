@@ -7,6 +7,7 @@ import {
   Platform,
   ScrollView,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 
 import { useForm, Controller } from 'react-hook-form';
@@ -18,6 +19,9 @@ import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 import { theme } from '@/lib/theme';
 import { on } from 'events';
+
+import * as ImagePicker from 'expo-image-picker';
+import { Camera, Pencil } from 'lucide-react-native'; // certifique-se de ter esse pacote instalado
 
 
 interface AuthFormProps {
@@ -41,6 +45,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
     handleSubmit,
     formState: { errors },
     clearErrors,
+    setValue,
   } = useForm({
     resolver: zodResolver(validationSchema),
     defaultValues: {
@@ -51,10 +56,36 @@ export const AuthForm: React.FC<AuthFormProps> = ({
       completeName: '',
       telephone: '',
       address: '',
+      profileImage: '', // <-- ADICIONE O CAMPO profileImage
     },
   });
 
   const [step, setStep] = useState(1);
+
+  const [profileImage, setProfileImage] = useState(''); 
+  
+  const handlePickImage = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (!permissionResult.granted) {
+      alert('Permission to access media library is required!');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setProfileImage(result.assets[0].uri);
+      setValue('profileImage', result.assets[0].uri); // <-- ATUALIZE O VALOR NO FORMULÁRIO
+    }
+
+    console.log(result);
+  };
   
 
   // Form configuration based on type
@@ -271,6 +302,24 @@ export const AuthForm: React.FC<AuthFormProps> = ({
         )}
         {step === 2 && (
           <View style={styles.form}>
+            <TouchableOpacity onPress={handlePickImage} activeOpacity={0.8} style={styles.imagePickerContainer}>
+              {profileImage ? (
+                <View style={styles.imageWrapper}>
+                  <Image source={{ uri: profileImage }} style={styles.profileImage} />
+                  <TouchableOpacity style={styles.editIcon} onPress={handlePickImage}>
+                    <Pencil color="#fff" size={18} />
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <View style={styles.placeholderImage}>
+                  <Camera color="#aaa" size={32} />
+                  <TouchableOpacity style={styles.editIcon} onPress={handlePickImage}>
+                    <Pencil color="#fff" size={18} />
+                  </TouchableOpacity>
+                </View>
+              )}
+            </TouchableOpacity>
+
             {formConfig.fields.includes('nickname') && (
               <Controller
                 control={control}
@@ -294,7 +343,22 @@ export const AuthForm: React.FC<AuthFormProps> = ({
 
             <Button
               title="Submit"
-              onPress={setStep.bind(null, 3)}
+              onPress={handleSubmit(
+                () => {
+                  // Sucesso: pode avançar
+                  setStep(2);
+                },
+                (formErrors) => {
+                  // Se NÃO houver erro em address, telephone ou completeName, avança
+                  if (!formErrors.nickname) {
+                    clearErrors();
+                    setStep(3);
+
+                  }
+                  // Se quiser, pode exibir os erros aqui
+                  // console.log(formErrors);
+                }
+              )}
               loading={isLoading}
               fullWidth
               size="lg"
@@ -388,10 +452,40 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.spacing.md,
     width: '100%',
   },
+  imagePickerContainer: {
+    alignItems: 'center',
+    marginTop: theme.spacing.xl,
+  },
+  profileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+  },
+  placeholderImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: theme.colors.neutrals[200],
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  editIcon: {
+  position: 'absolute',
+  bottom: 4,
+  right: 4,
+  backgroundColor: theme.colors.primary[500],   
+  borderRadius: 16,
+  padding: 6,
+  },
   formContainer: {
     width: '100%',
     maxWidth: 400,
     alignSelf: 'center',
+  },
+  imageWrapper: {
+    position: 'relative',
+    width: 100,
+    height: 100,
   },
   header: {
     marginBottom: theme.spacing.lg,

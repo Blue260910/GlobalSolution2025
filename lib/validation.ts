@@ -23,6 +23,7 @@ export const registerSchema = z.object({
   completeName: z.string().min(3, 'Complete name must be at least 3 characters'),
   telephone: z.string().min(10, 'Telephone number must be at least 10 digits'),
   address: z.string().min(5, 'Address must be at least 5 characters'),
+  profileImage: z.string().min(5, 'Profile image is required').optional(),
 }).refine(data => data.password === data.confirmPassword, {
   path: ['confirmPassword'],
   message: 'Passwords do not match',
