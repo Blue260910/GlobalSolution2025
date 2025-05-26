@@ -20,44 +20,6 @@ import { theme } from '@/lib/theme';
 import { on } from 'events';
 
 
-const step1Schemas = [
-  z.object({
-    completeName: z.string().min(3, 'Nome completo obrigatório'),
-    telephone: z.string().min(10, 'Telefone obrigatório'),
-    address: z.string().min(5, 'Endereço obrigatório'),
-  })
-];
-
-const step2Schemas = [
-  z.object({
-    nickname: z.string().min(3, 'Apelido obrigatório'),
-  })
-];
-
-const step3Schemas = [
-  z.object({
-    email: z.string().email('Email inválido'),
-    password: z.string().min(6, 'Senha obrigatória'),
-    confirmPassword: z.string().min(6, 'Confirme a senha'),
-  }).refine(data => data.password === data.confirmPassword, {
-    path: ['confirmPassword'],
-    message: 'As senhas não coincidem',
-  }),
-];
-
-
-const step1submit = (onSubmit: (data: any) => void) => {
-  return (data: any) => {
-    const step1Data = {
-      completeName: data.completeName,
-      telephone: data.telephone,
-      address: data.address,
-    };
-
-    onSubmit(step1Data);
-  };
-}
-
 interface AuthFormProps {
   type: 'login' | 'register' | 'reset';
   onSubmit: (data: any) => void;
@@ -72,11 +34,13 @@ export const AuthForm: React.FC<AuthFormProps> = ({
   isLoading,
   error,
   validationSchema,
+  
 }) => {
   const {
     control,
     handleSubmit,
     formState: { errors },
+    clearErrors,
   } = useForm({
     resolver: zodResolver(validationSchema),
     defaultValues: {
@@ -91,6 +55,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
   });
 
   const [step, setStep] = useState(1);
+  
 
   // Form configuration based on type
   const formConfig = {
@@ -281,7 +246,22 @@ export const AuthForm: React.FC<AuthFormProps> = ({
 
             <Button
               title={formConfig.buttonText}
-              onPress={handleSubmit(step1submit(onSubmit))}
+              onPress={handleSubmit(
+                () => {
+                  // Sucesso: pode avançar
+                  setStep(2);
+                },
+                (formErrors) => {
+                  // Se NÃO houver erro em address, telephone ou completeName, avança
+                  if (!formErrors.address && !formErrors.telephone && !formErrors.completeName) {
+                    clearErrors();
+                    setStep(2);
+
+                  }
+                  // Se quiser, pode exibir os erros aqui
+                  // console.log(formErrors);
+                }
+              )}
               loading={isLoading}
               fullWidth
               size="lg"
