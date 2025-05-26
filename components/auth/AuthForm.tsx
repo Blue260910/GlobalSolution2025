@@ -243,9 +243,22 @@ export const AuthForm: React.FC<AuthFormProps> = ({
                   <Input
                     label="Telefone"
                     value={value}
-                    onChangeText={onChange}
+                    onChangeText={text => {
+                      // Remove tudo que não for número
+                      let cleaned = text.replace(/\D/g, '');
+                      // Aplica a máscara (XX) XXXXX-XXXX
+                      if (cleaned.length > 2) {
+                        cleaned = `(${cleaned.slice(0, 2)}) ${cleaned.slice(2)}`;
+                      }
+                      if (cleaned.length > 10) {
+                        cleaned = `${cleaned.slice(0, 10)}-${cleaned.slice(10, 14)}`;
+                      }
+                      // Limita a 15 caracteres (formato completo)
+                      cleaned = cleaned.slice(0, 15);
+                      onChange(cleaned);
+                    }}
                     onBlur={onBlur}
-                    placeholder="(XX) XXXXX-XXXX"
+                    placeholder="(99) 99999-9999"
                     keyboardType="phone-pad"
                     autoCapitalize="none"
                     error={errors.telephone?.message?.toString()}
@@ -262,11 +275,20 @@ export const AuthForm: React.FC<AuthFormProps> = ({
                 name="address"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <Input
-                    label="Endereço"
+                    label="CEP"
                     value={value}
-                    onChangeText={onChange}
+                    onChangeText={text => {
+                      // Remove tudo que não for número
+                      let cleaned = text.replace(/\D/g, '');
+                      // Aplica a máscara do CEP: 12345-678
+                      if (cleaned.length > 5) {
+                        cleaned = cleaned.slice(0, 5) + '-' + cleaned.slice(5, 8);
+                      }
+                      onChange(cleaned);
+                    }}
                     onBlur={onBlur}
-                    placeholder="Seu endereço"
+                    placeholder="12345-678"
+                    keyboardType="phone-pad"
                     error={errors.address?.message?.toString()}
                     icon={<Lock size={20} color={theme.colors.neutrals[500]} />}
                     returnKeyType="done"

@@ -13,6 +13,7 @@ export default function ProfileScreen() {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [lastLogin, setLastLogin] = useState<Date | null>(null);
+  const [cepData, setCepData] = useState<any>(null); // Estado para guardar o endereço do CEP
   const email = user?.email || 'No email';
   const username = user?.user_metadata.first_name || 'User';
   const avatar = user?.user_metadata?.avatar_url || 'https://images.pexels.com/photos/1270076/pexels-photo-1270076.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2';
@@ -24,7 +25,30 @@ export default function ProfileScreen() {
     if (user?.created_at) {
       setLastLogin(new Date(user.last_sign_in_at || user.created_at));
     }
-  }, [user]);
+
+    // Busca o endereço do CEP apenas se ainda não buscou e se existe um CEP
+    if (user?.user_metadata?.address && !cepData) {
+      async function buscarCep(cep: string) {
+        console.log('Buscando CEP:', cep);
+        const res = await fetch("https://oziwendirtmqquvqkree.supabase.co/functions/v1/CEP-Finder", {
+          method: "POST",
+          headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96aXdlbmRpcnRtcXF1dnFrcmVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcwOTA4MzksImV4cCI6MjA2MjY2NjgzOX0.PjysWhT8Y32PldsP3OsAefhiKfxjF8naRDhrrSddRVQ`,
+          },
+          body: JSON.stringify({ cep }),
+        });
+
+        const data = await res.json();
+        setCepData(data); // Salva o resultado no estado
+        console.log('Dados do CEP:', data);
+      }
+      buscarCep(user.user_metadata.address.replace(/\D/g, ''))
+        .catch(error => {
+          console.error('Error fetching address data:', error);
+        });
+    }
+  }, [user, cepData]);
 
   const formatDate = (date: Date | null) => {
     if (!date) return 'Unknown';
@@ -59,13 +83,6 @@ export default function ProfileScreen() {
           </View>
           <Text style={styles.username}>{username}</Text>
           <Text style={styles.email}>{email}</Text>
-          <Button 
-            title="Edit Profile" 
-            variant="outline"
-            onPress={() => {}}
-            size="sm"
-            style={styles.editButton}
-          />
         </Animated.View>
 
         <View style={styles.infoSection}>
@@ -92,6 +109,36 @@ export default function ProfileScreen() {
               value={formatDate(lastLogin)}
               delay={300}
             />
+
+            <InfoItem 
+              icon={<Edit2 size={20} color={theme.colors.primary[500]} />}
+              label="Complete Name"
+              value={user?.user_metadata.last_name || 'No complete name'}
+              delay={400}
+            />
+
+            <InfoItem 
+              icon={<Edit2 size={20} color={theme.colors.primary[500]} />}
+              label="Telephone"
+              value={user?.user_metadata.telephone || 'No telephone'}
+              delay={500}
+            />
+
+            <InfoItem 
+              icon={<Edit2 size={20} color={theme.colors.primary[500]} />}
+              label="CEP Cadastrado"
+              value={user?.user_metadata.address || 'No address'}
+              delay={600}
+            />
+
+            {cepData && (
+              <InfoItem 
+                icon={<Edit2 size={20} color={theme.colors.primary[500]} />}
+                label="Logradouro"
+                value={cepData.logradouro || 'No logradouro'}
+                delay={700}
+              />
+            )}
             
             <InfoItem 
               icon={<Shield size={20} color={theme.colors.primary[500]} />}
