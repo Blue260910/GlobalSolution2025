@@ -10,6 +10,7 @@ import NotificationsScreen from '@/app/(app)/notifications';
 import SettingsScreen from '@/app/(app)/settings';
 import ProfileScreen from '@/app/(app)/profile';
 import SummaryScreen from '@/app/(app)/summary';
+import MapScreen from '@/app/(app)/map';
 
 const Tab = createBottomTabNavigator();
 
@@ -35,6 +36,7 @@ export default function AppLayout() {
         tabBarIcon: ({ color, size }) => {
           let iconName: keyof typeof Feather.glyphMap = 'home';
           if (route.name === 'Home') iconName = 'home';
+          if (route.name === 'Map') iconName = 'map';
           if (route.name === 'Notifications') iconName = 'bell';
           if (route.name === 'Settings') iconName = 'settings';
           if (route.name === 'Profile') iconName = 'user';
@@ -44,6 +46,7 @@ export default function AppLayout() {
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+      <Tab.Screen name="Map" component={MapScreen} options={{ headerShown: false }} />
       <Tab.Screen name="Summary" component={SummaryScreen} options={{ headerShown: false }} />
       <Tab.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: false }} />
       <Tab.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
