@@ -20,17 +20,36 @@ export default function WeatherCard({ data }: WeatherCardProps) {
   });
 
   const getGradientColors = (): [string, string] => {
-    switch (data.type) {
-      case 'temperature':
-        return ['#FF6B6B', '#FF8787'];
-      case 'humidity':
-        return ['#4DABF7', '#74C0FC'];
-      case 'rain':
-        return ['#748FFC', '#91A7FF'];
-      case 'uv':
-        return ['#FCC419', '#FFD43B'];
-      default:
-        return ['#4DA6FF', '#2E86DE'];
+    // Verifica se já passou das 18h
+    const now = new Date();
+    const darkMode = now.getHours() >= 188;
+    const type = data.type;
+    if (darkMode) {
+      switch (type) {
+        case 'temperature':
+          return ['#3a4d39', '#9dc08b'];
+        case 'humidity':
+          return ['#1B4F72', '#21618C'];
+        case 'rain':
+          return ['#2C3E75', '#3D5A99'];
+        case 'uv':
+          return ['#8A6D0A', '#B58900'];
+        default:
+          return ['#1C2A48', '#2E4053'];
+      }
+    } else {
+      switch (type) {
+        case 'temperature':
+          return ['#FF6B6B', '#FF8787'];
+        case 'humidity':
+          return ['#4DABF7', '#74C0FC'];
+        case 'rain':
+          return ['#748FFC', '#91A7FF'];
+        case 'uv':
+          return ['#FCC419', '#FFD43B'];
+        default:
+          return ['#4DA6FF', '#2E86DE'];
+      }
     }
   };
 
