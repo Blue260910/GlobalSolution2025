@@ -5,6 +5,7 @@ import { Message, LocationType } from '../types';
 import { formatTimestamp } from '../utils/dateUtils';
 import { colors, spacing, typography, shadows, borderRadius } from '../lib/theme';
 import { useMessages } from '../contexts/MessageContext';
+import { differenceInMinutes, differenceInHours, differenceInDays, parse } from 'date-fns';
 
 interface MessageCardProps {
   message: Message;
@@ -79,6 +80,25 @@ const MessageCard: React.FC<MessageCardProps> = ({ message }) => {
     });
   };
 
+  // Função para calcular tempo até resolver
+  const getTempoResolucao = () => {
+    if (message.status !== 'inativo' || !message.horarioDeInativacao || !message.horarioDeEnvio) return null;
+    // Converte '27-05-2025-15-43-07' para '2025-05-27T15:43:07'
+    const parseCustomDate = (str: string) => {
+      const [dia, mes, ano, hora, min, seg] = str.split('-');
+      return new Date(`${ano}-${mes}-${dia}T${hora}:${min}:${seg}`);
+    };
+    const inicio = parseCustomDate(message.horarioDeEnvio);
+    const fim = parseCustomDate(message.horarioDeInativacao);
+    if (isNaN(inicio.getTime()) || isNaN(fim.getTime())) return null;
+    const diffMin = differenceInMinutes(fim, inicio);
+    const diffHoras = differenceInHours(fim, inicio);
+    const diffDias = differenceInDays(fim, inicio);
+    if (diffDias > 0) return `${diffDias} dia${diffDias > 1 ? 's' : ''}`;
+    if (diffHoras > 0) return `${diffHoras} hora${diffHoras > 1 ? 's' : ''}`;
+    return `${diffMin} minuto${diffMin > 1 ? 's' : ''}`;
+  };
+
   return (
     <Animated.View style={[styles.card, { opacity: fadeAnim }]}>
       {/* Header */}
@@ -132,12 +152,17 @@ const MessageCard: React.FC<MessageCardProps> = ({ message }) => {
       </View>
       
       {/* Status Badge */}
-      {message.status === 'inativo' && (
-        <View style={styles.statusBadge}>
-          <Text style={styles.statusText}>Resolvido</Text>
-        </View>
-      )}
-      
+      <View style={message.status === "inativo" ? styles.statusBadge : styles.statusBadgeAtivo}>
+        <Text style={styles.statusText}>
+          {message.status === 'inativo'
+            ? `Resolvido às ${message.horarioDeInativacao ? formatTimestamp(message.horarioDeInativacao) : ''}`
+            : 'Ativo'}
+        </Text>
+        {message.status === 'inativo' && getTempoResolucao() && (
+          <Text style={[styles.statusText, { fontSize: 10, opacity: 0.8 }]}>Tempo até resolver: {getTempoResolucao()}</Text>
+        )}
+      </View>
+
       {/* Content */}
       <View style={styles.content}>
         <Text style={styles.title}>{message.tituloEnvio}</Text>
@@ -258,7 +283,15 @@ const styles = StyleSheet.create({
   },
   statusBadge: {
     backgroundColor: colors.status.inactive,
-    paddingHorizontal: spacing.sm,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs / 2,
+    borderRadius: borderRadius.round,
+    alignSelf: 'flex-start',
+    marginBottom: spacing.sm
+  },
+  statusBadgeAtivo: {
+    backgroundColor: colors.error[500],
+    paddingHorizontal: spacing.md,
     paddingVertical: spacing.xs / 2,
     borderRadius: borderRadius.round,
     alignSelf: 'flex-start',

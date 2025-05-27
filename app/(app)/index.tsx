@@ -13,7 +13,8 @@ import { StockSearchModal } from '../../components/ui/StockSearchModal';
 import { useState } from 'react';
 
 import WeatherCard from '../../components/WeatherCard';
-import { weatherMetrics } from '../../components/data/weatherData';
+import { getWeatherMetrics } from '../../components/data/weatherData';
+import { WeatherMetric } from '../../components/data/weatherData';
 
 
 
@@ -41,6 +42,12 @@ export default function HomeScreen() {
   
   // Get first part of email as username
   const username = user?.user_metadata.first_name || 'User';
+
+  const [weatherMetrics, setWeatherMetrics] = useState<WeatherMetric[] | null>(null);
+
+  useEffect(() => {
+    getWeatherMetrics().then(setWeatherMetrics);
+  }, []);
 
   return (
     <SafeAreaWrapper style={styles.container}>
@@ -84,15 +91,19 @@ export default function HomeScreen() {
 
 
         <View style={styles.cardsContainer}>
-          {weatherMetrics.map((metric, index) => (
-            <Animated.View 
-              key={metric.id} 
-              entering={FadeInDown.delay(index * 200).springify()}
-              style={styles.cardWrapper}
-            >
-              <WeatherCard data={metric} />
-            </Animated.View>
-          ))}
+          {weatherMetrics ? (
+            weatherMetrics.map((metric, index) => (
+              <Animated.View 
+                key={metric.id} 
+                entering={FadeInDown.delay(index * 200).springify()}
+                style={styles.cardWrapper}
+              >
+                <WeatherCard data={metric} />
+              </Animated.View>
+            ))
+          ) : (
+            <Text>Carregando dados do clima...</Text>
+          )}
         </View>
 
       </ScrollView>
