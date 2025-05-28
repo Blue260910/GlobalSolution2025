@@ -89,7 +89,6 @@ export default function MapScreen() {
   
 
   const { user } = useAuth();
-  
   // Get first part of email as username
   const username = user?.user_metadata.first_name || 'User';
 
@@ -158,46 +157,52 @@ export default function MapScreen() {
         </View>
 
         <View style={{ height: 500, borderRadius: 16, overflow: 'hidden', margin: 16 }}>
-          <MapView
-            style={{ flex: 1 }}
-            initialRegion={initialRegion}
-            showsUserLocation={true} // <-- Adicione esta linha
-
-          >
-            {/* Marcadores dinâmicos para cada mensagem com avatar */}
-            {messages.map((msg, idx) =>
-              msg.lat && msg.long && msg.avatar ? (
-                <Marker
-                  key={idx}
-                  coordinate={{ latitude: Number(msg.lat), longitude: Number(msg.long) }}
-                  style={{ zIndex: 1000 }}
-                  title={msg['tituloEnvio']}
-                  description={msg.descricao}
-                  anchor={{ x: 0.5, y: 0.5 }}
-                >
-                    <Image
-                      source={{ uri: msg.avatar }}
-                      style={{
-                        width: 36,
-                        height: 36,
-                        borderColor: '#238CA4',
-                        borderWidth: 3,
-                        backgroundColor: '#fff',
-                        borderRadius: 30, // deixa a imagem redonda
-                        // Adicione aqui outros estilos que quiser
-                      }}
-                      resizeMode="cover"
-                    />
-                </Marker>
-              ) : null
-            )}
-          </MapView>
+          {(location.lat !== '0' && location.long !== '0') ? (
+            <MapView
+              style={{ flex: 1 }}
+              initialRegion={initialRegion}
+              showsUserLocation={true}
+            >
+              {/* Marcadores dinâmicos para cada mensagem com avatar */}
+              {messages.map((msg, idx) =>
+                msg.lat && msg.long && msg.avatar ? (
+                  <Marker
+                    key={idx}
+                    coordinate={{ latitude: Number(msg.lat), longitude: Number(msg.long) }}
+                    style={{ zIndex: 1000 }}
+                    title={msg['tituloEnvio']}
+                    description={msg.descricao}
+                    anchor={{ x: 0.5, y: 0.5 }}
+                  >
+                      <Image
+                        source={{ uri: msg.avatar }}
+                        style={{
+                          width: 36,
+                          height: 36,
+                          borderColor: '#238CA4',
+                          borderWidth: 3,
+                          backgroundColor: '#fff',
+                          borderRadius: 30, // deixa a imagem redonda
+                          // Adicione aqui outros estilos que quiser
+                        }}
+                        resizeMode="cover"
+                      />
+                  </Marker>
+                ) : null
+              )}
+            </MapView>
+          ) : (
+            <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
+              <Text>Carregando localização...</Text>
+            </View>
+          )}
         </View>
 
       </ScrollView>
     </SafeAreaWrapper>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
