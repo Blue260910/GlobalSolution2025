@@ -1,78 +1,90 @@
+import React, { useState } from 'react';
 import theme from '@/lib/theme';
-import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, LayoutAnimation, Platform, UIManager } from 'react-native';
+
+if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
+
+const sections = [
+  {
+    title: 'Antes da Falta de Energia',
+    label: 'Preparação:',
+    items: [
+      'Tenha lanternas e pilhas/baterias extras disponíveis.',
+      'Mantenha celulares e dispositivos carregados.',
+      'Estoquede água potável e alimentos não perecíveis.',
+      'Conheça a localização do quadro de energia da residência.',
+      'Tenha uma lista de contatos de emergência anotada.',
+    ],
+  },
+  {
+    title: 'Durante a Falta de Energia',
+    label: 'Cuidados:',
+    items: [
+      'Evite abrir geladeiras e freezers para conservar alimentos.',
+      'Desligue aparelhos eletrônicos das tomadas para evitar danos quando a energia retornar.',
+      'Use lanternas ao invés de velas para evitar incêndios.',
+      'Mantenha-se informado por rádio à pilha ou celular sobre a situação.',
+      'Evite contato com fios caídos ou áreas alagadas.',
+    ],
+  },
+  {
+    title: 'Após o Retorno da Energia',
+    label: 'Ações:',
+    items: [
+      'Ligue os aparelhos eletrônicos gradualmente.',
+      'Verifique se há danos em equipamentos e instalações elétricas.',
+      'Descarte alimentos que ficaram muito tempo sem refrigeração.',
+      'Informe a concessionária sobre qualquer anormalidade.',
+    ],
+  },
+  {
+    title: 'Dicas Gerais',
+    label: '',
+    items: [
+      'Evite o uso de geradores em ambientes fechados.',
+      'Mantenha crianças longe de tomadas e quadros de energia.',
+      'Participe de treinamentos de primeiros socorros se possível.',
+    ],
+  },
+];
 
 export default function PowerOutageGuidelinesScreen() {
+  const [expanded, setExpanded] = useState<number | null>(null);
+
+  const toggleSection = (idx: number) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setExpanded(expanded === idx ? null : idx);
+  };
+
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Boas Práticas em Falta de Energia</Text>
-        <Text style={styles.subtitle}>
-          Saiba como agir e se preparar para eventos de falta de energia causados por desastres naturais. Siga as orientações abaixo para garantir sua segurança e minimizar impactos.
-        </Text>
-
-        {/* Antes da Falta de Energia */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Antes da Falta de Energia</Text>
-          <View style={styles.card}>
-            <Text style={styles.infoLabel}>Preparação:</Text>
-            <View style={styles.objectivesList}>
-              <View style={styles.objectiveItem}><Text style={styles.objectiveText}>Tenha lanternas e pilhas/baterias extras disponíveis.</Text></View>
-              <View style={styles.objectiveItem}><Text style={styles.objectiveText}>Mantenha celulares e dispositivos carregados.</Text></View>
-              <View style={styles.objectiveItem}><Text style={styles.objectiveText}>Estoquede água potável e alimentos não perecíveis.</Text></View>
-              <View style={styles.objectiveItem}><Text style={styles.objectiveText}>Conheça a localização do quadro de energia da residência.</Text></View>
-              <View style={styles.objectiveItem}><Text style={styles.objectiveText}>Tenha uma lista de contatos de emergência anotada.</Text></View>
+    <View style={styles.container}>
+      <Text style={styles.title}>Boas Práticas em Falta de Energia</Text>
+      <Text style={styles.subtitle}>
+        Saiba como agir e se preparar para eventos de falta de energia causados por desastres naturais. Siga as orientações abaixo para garantir sua segurança e minimizar impactos.
+      </Text>
+      {sections.map((section, idx) => (
+        <View key={idx} style={styles.section}>
+          <TouchableOpacity onPress={() => toggleSection(idx)} activeOpacity={0.8} style={styles.header}>
+            <Text style={styles.sectionTitle}>{section.title}</Text>
+            <Text style={styles.expandIcon}>{expanded === idx ? '▲' : '▼'}</Text>
+          </TouchableOpacity>
+          {expanded === idx && (
+            <View style={styles.card}>
+              {section.label ? <Text style={styles.infoLabel}>{section.label}</Text> : null}
+              <View style={styles.objectivesList}>
+                {section.items.map((item, i) => (
+                  <View key={i} style={styles.objectiveItem}>
+                    <Text style={styles.objectiveText}>{item}</Text>
+                  </View>
+                ))}
+              </View>
             </View>
-          </View>
+          )}
         </View>
-
-        {/* Durante a Falta de Energia */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Durante a Falta de Energia</Text>
-          <View style={styles.card}>
-            <Text style={styles.infoLabel}>Cuidados:</Text>
-            <View style={styles.objectivesList}>
-              <View style={styles.objectiveItem}><Text style={styles.objectiveText}>Evite abrir geladeiras e freezers para conservar alimentos.</Text></View>
-              <View style={styles.objectiveItem}><Text style={styles.objectiveText}>Desligue aparelhos eletrônicos das tomadas para evitar danos quando a energia retornar.</Text></View>
-              <View style={styles.objectiveItem}><Text style={styles.objectiveText}>Use lanternas ao invés de velas para evitar incêndios.</Text></View>
-              <View style={styles.objectiveItem}><Text style={styles.objectiveText}>Mantenha-se informado por rádio à pilha ou celular sobre a situação.</Text></View>
-              <View style={styles.objectiveItem}><Text style={styles.objectiveText}>Evite contato com fios caídos ou áreas alagadas.</Text></View>
-            </View>
-          </View>
-        </View>
-
-        {/* Após o Retorno da Energia */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Após o Retorno da Energia</Text>
-          <View style={styles.card}>
-            <Text style={styles.infoLabel}>Ações:</Text>
-            <View style={styles.objectivesList}>
-              <View style={styles.objectiveItem}><Text style={styles.objectiveText}>Ligue os aparelhos eletrônicos gradualmente.</Text></View>
-              <View style={styles.objectiveItem}><Text style={styles.objectiveText}>Verifique se há danos em equipamentos e instalações elétricas.</Text></View>
-              <View style={styles.objectiveItem}><Text style={styles.objectiveText}>Descarte alimentos que ficaram muito tempo sem refrigeração.</Text></View>
-              <View style={styles.objectiveItem}><Text style={styles.objectiveText}>Informe a concessionária sobre qualquer anormalidade.</Text></View>
-            </View>
-          </View>
-        </View>
-
-        {/* Dicas Gerais */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Dicas Gerais</Text>
-          <View style={styles.card}>
-            <View style={styles.objectivesList}>
-              <View style={styles.objectiveItem}><Text style={styles.objectiveText}>Evite o uso de geradores em ambientes fechados.</Text></View>
-              <View style={styles.objectiveItem}><Text style={styles.objectiveText}>Mantenha crianças longe de tomadas e quadros de energia.</Text></View>
-              <View style={styles.objectiveItem}><Text style={styles.objectiveText}>Participe de treinamentos de primeiros socorros se possível.</Text></View>
-            </View>
-          </View>
-        </View>
-      </View>
-    </ScrollView>
+      ))}
+    </View>
   );
 }
 
@@ -81,8 +93,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.neutrals[50],
     marginTop: theme.spacing.lg,
-  },
-  content: {
     padding: 24,
   },
   title: {
@@ -97,13 +107,26 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   section: {
-    marginBottom: 24,
+    marginBottom: 16,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    ...theme.shadows.small,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
     color: '#334155',
-    marginBottom: 12,
+  },
+  expandIcon: {
+    fontSize: 18,
+    color: '#2563EB',
+    marginLeft: 8,
   },
   card: {
     backgroundColor: '#FFFFFF',
@@ -114,6 +137,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 4,
     elevation: 2,
+    marginTop: 4,
   },
   infoLabel: {
     fontSize: 14,
