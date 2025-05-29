@@ -7,7 +7,7 @@ import {
   ScrollView,
 } from 'react-native';
 
-export default function GuidelinesScreen() {
+export default function PowerOutageGuidelinesScreen() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.content}>

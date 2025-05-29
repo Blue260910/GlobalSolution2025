@@ -13,7 +13,7 @@ import {
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Mail, Lock, UserRound } from 'lucide-react-native';
+import { Mail, Lock, UserRound, Home, Contact } from 'lucide-react-native';
 
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
@@ -91,15 +91,15 @@ export const AuthForm: React.FC<AuthFormProps> = ({
   // Form configuration based on type
   const formConfig = {
     login: {
-      title: 'Welcome Back',
-      subtitle: 'Sign in to your account',
-      buttonText: 'Sign In',
+      title: 'Bem-vindo de volta',
+      subtitle: 'Entre na sua conta',
+      buttonText: 'Entrar',
       fields: ['email', 'password'],
     },
     register: {
-      title: 'Create Account',
-      subtitle: 'Sign up for a new account',
-      buttonText: 'Create Account',
+      title: 'Criar conta',
+      subtitle: 'Cadastre-se para uma nova conta',
+      buttonText: 'Criar conta',
       fields: [
         'email',
         'password',
@@ -112,9 +112,9 @@ export const AuthForm: React.FC<AuthFormProps> = ({
       ],
     },
     reset: {
-      title: 'Reset Password',
-      subtitle: 'Enter your email to receive a reset link',
-      buttonText: 'Send Reset Link',
+      title: 'Redefinir senha',
+      subtitle: 'Digite seu e-mail para receber um link de redefinição',
+      buttonText: 'Enviar link de redefinição',
       fields: ['email'],
     },
   }[type];
@@ -148,11 +148,11 @@ export const AuthForm: React.FC<AuthFormProps> = ({
               name="email"
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input
-                  label="Email"
+                  label="E-mail"
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
-                  placeholder="example@email.com"
+                  placeholder="exemplo@email.com"
                   keyboardType="email-address"
                   autoCapitalize="none"
                   error={errors.email?.message?.toString()}
@@ -220,7 +220,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
                 name="completeName"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <Input
-                    label="Qual seu nome completo?"
+                    label="Nome completo"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
@@ -262,7 +262,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
                     keyboardType="phone-pad"
                     autoCapitalize="none"
                     error={errors.telephone?.message?.toString()}
-                    icon={<Mail size={20} color={theme.colors.neutrals[500]} />}
+                    icon={<Contact size={20} color={theme.colors.neutrals[500]} />}
                     returnKeyType="next"
                   />
                 )}
@@ -348,11 +348,11 @@ export const AuthForm: React.FC<AuthFormProps> = ({
                 name="nickname"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <Input
-                    label="Nick Name"
+                    label="Apelido"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
-                    placeholder="Your nick name"
+                    placeholder="Seu apelido"
                     error={errors.nickname?.message?.toString()}
                     icon={
                       <UserRound size={20} color={theme.colors.neutrals[500]} />
@@ -364,7 +364,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
             )}
 
             <Button
-              title="Submit"
+              title="Enviar"
               onPress={handleSubmit(
                 () => {
                   // Sucesso: pode avançar
@@ -397,11 +397,11 @@ export const AuthForm: React.FC<AuthFormProps> = ({
                 name="email"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <Input
-                    label="Email"
+                    label="E-mail"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
-                    placeholder="example@email.com"
+                    placeholder="exemplo@email.com"
                     keyboardType="email-address"
                     autoCapitalize="none"
                     error={errors.email?.message?.toString()}
@@ -418,11 +418,11 @@ export const AuthForm: React.FC<AuthFormProps> = ({
                 name="password"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <Input
-                    label="Password"
+                    label="Senha"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
-                    placeholder="Your password"
+                    placeholder="Sua senha"
                     secureTextEntry
                     error={errors.password?.message?.toString()}
                     icon={<Lock size={20} color={theme.colors.neutrals[500]} />}
@@ -438,11 +438,11 @@ export const AuthForm: React.FC<AuthFormProps> = ({
                 name="confirmPassword"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <Input
-                    label="Confirm Password"
+                    label="Confirmar senha"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
-                    placeholder="Confirm password"
+                    placeholder="Confirme sua senha"
                     secureTextEntry
                     error={errors.confirmPassword?.message?.toString()}
                     icon={<Lock size={20} color={theme.colors.neutrals[500]} />}

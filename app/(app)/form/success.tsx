@@ -27,9 +27,9 @@ export default function SuccessScreen() {
     return profile;
   };
 
-  const viewSummary = () => {
+  const viewguidelines = () => {
       // @ts-ignore
-      navigation.navigate('Summary');
+      navigation.navigate('guidelines');
   };
   return (
     <ScrollView style={styles.container}>
@@ -107,7 +107,7 @@ export default function SuccessScreen() {
         <View style={styles.buttonContainer}>
           <FormButton
             title="Ver Resumo do Perfil"
-            onPress={viewSummary}
+            onPress={viewguidelines}
           />
         </View>
       </View>

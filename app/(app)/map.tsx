@@ -123,40 +123,85 @@ export default function MapScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.header}>
-          <View>
-            <Text style={[styles.greeting, isSearchButtonExpand && { display: "none", }]}   >Good morning,</Text>
-            <Text style={[styles.username, isSearchButtonExpand && { display: "none", }]} >{username.charAt(0).toUpperCase() + username.slice(1).toLowerCase()}</Text>
+        <View style={styles.bannerContainer}>
+          <Image
+            source={{ uri: 'https://images.unsplash.com/photo-1454779132693-e5cd0a216ed3?q=80&w=2671&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' }}
+            style={styles.bannerImage}
+          />
+          <Animated.View style={styles.bannerContent} entering={FadeInDown}>
+            <Text style={styles.bannerTitle}>Bem vindo ao mapa </Text>
+            <Text style={styles.bannerDescription}>Veja relatos de apagões e acompanhe as reclamações de outros usuários em tempo real.</Text>
+          </Animated.View>
+        </View>
+        
+        {/* Cards de resumo */}
+        <View style={{ flexDirection: 'row', gap: 16, marginHorizontal: 24, marginBottom: 16 }}>
+          {/* Card 1: Total de mensagens ativas */}
+          <View style={{ flex: 1, backgroundColor: '#fff', borderRadius: 12, padding: 16, alignItems: 'center', ...theme.shadows.small }}>
+            <Text style={{ fontSize: 32, fontWeight: 'bold', color: theme.colors.primary[500] }}>{messages.length}</Text>
+            <Text style={{ color: theme.colors.neutrals[700], fontSize: 14, marginTop: 4 }}>Mensagens Ativas</Text>
           </View>
-          <View style={styles.headerIcons}>
-          <TouchableOpacity
-              style={[
-              styles.iconButtonSearch,
-              isSearchButtonExpand && { flex: 1, alignItems: 'flex-end', paddingRight: theme.spacing.sm, marginLeft: theme.spacing.sm },
-            ]}
-            onPress={() => toogleSearchButtonExpand()}
-            
-          >
-            <Search size={24} color={theme.colors.neutrals[800]} />
-          </TouchableOpacity>
-            <StockSearchModal
-              visible={isSearchModalVisible}
-              searchText={searchText}
-              onChangeSearchText={setSearchText}
-              onClose={() => setIsSearchModalVisible(false)}
-            />
+          {/* Card 2: Tempo total das reclamações */}
+          <View style={{ flex: 1, backgroundColor: '#fff', borderRadius: 12, padding: 16, alignItems: 'center', ...theme.shadows.small }}>
+            {/* Tempo total das mensagens ativas */}
+            {messages.length > 0 ? (() => {
+              // Função para converter '27-05-2025-15-43-07' para Date
+              const parseCustomDate = (str: string) => {
+                if (!str) return null;
+                const [dia, mes, ano, hora, min, seg] = str.split('-');
+                return new Date(`${ano}-${mes}-${dia}T${hora}:${min}:${seg}`);
+              };
+              // Pega a mensagem ativa mais antiga
+              const oldest = messages.reduce((min, msg) => {
+                const minDate = parseCustomDate(min.horarioDeEnvio);
+                const msgDate = parseCustomDate(msg.horarioDeEnvio);
+                if (!minDate || !msgDate) return min;
+                return msgDate < minDate ? msg : min;
+              }, messages[0]);
+              const oldestTime = parseCustomDate(oldest.horarioDeEnvio);
+              if (!oldestTime || isNaN(oldestTime.getTime())) {
+                return (
+                  <>
+                    <Text style={{ fontSize: 32, fontWeight: 'bold', color: theme.colors.primary[500] }}>0min</Text>
+                    <Text style={{ color: theme.colors.neutrals[700], fontSize: 14, marginTop: 4 }}>
+                      Tempo total das mensagens
+                    </Text>
+                  </>
+                );
+              }
+              const now = new Date();
+              const diffMs = now.getTime() - oldestTime.getTime();
+              const diffMin = Math.floor(diffMs / 60000);
+              const diffHour = Math.floor(diffMin / 60);
+              const diffDay = Math.floor(diffHour / 24);
 
+              let tempoStr = '';
+              if (diffDay > 0) tempoStr = `${diffDay} dia${diffDay > 1 ? 's' : ''}`;
+              else if (diffHour > 0) tempoStr = `${diffHour}h ${diffMin % 60}min`;
+              else tempoStr = `${diffMin}min`;
 
-            <TouchableOpacity style={styles.iconButton}
-            // @ts-ignore
-             onPress={() => navigation.navigate('Notifications')}
-            >
-              <Bell size={24} color={theme.colors.neutrals[800]} />
-            </TouchableOpacity>
+              return (
+                <>
+                  <Text style={{ fontSize: 32, fontWeight: 'bold', color: theme.colors.primary[500] }}>
+                    {tempoStr}
+                  </Text>
+                  <Text style={{ color: theme.colors.neutrals[700], fontSize: 14, marginTop: 4 }}>
+                    Tempo total das mensagens
+                  </Text>
+                </>
+              );
+            })() : (
+              <>
+                <Text style={{ fontSize: 32, fontWeight: 'bold', color: theme.colors.primary[500] }}>0min</Text>
+                <Text style={{ color: theme.colors.neutrals[700], fontSize: 14, marginTop: 4 }}>
+                  Tempo total das mensagens
+                </Text>
+              </>
+            )}
           </View>
         </View>
 
-        <View style={{ height: 500, borderRadius: 16, overflow: 'hidden', margin: 16 }}>
+        <View style={{ height: 350, borderRadius: 16, overflow: 'hidden', margin: 16 }}>
           {(location.lat !== '0' && location.long !== '0') ? (
             <MapView
               style={{ flex: 1 }}
@@ -197,7 +242,6 @@ export default function MapScreen() {
             </View>
           )}
         </View>
-
       </ScrollView>
     </SafeAreaWrapper>
   );
@@ -208,6 +252,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.neutrals[50],
+    marginTop: theme.spacing.lg,
+    
   },
   scrollView: {
     flex: 1,
@@ -286,7 +332,7 @@ const styles = StyleSheet.create({
   },
   bannerContent: {
     padding: theme.spacing.lg,
-    backgroundColor: 'rgba(0,0,0,0.4)',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
     height: 150,
     justifyContent: 'center',
   },

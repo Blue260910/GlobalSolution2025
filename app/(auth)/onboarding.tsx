@@ -36,14 +36,14 @@ export default function LoginScreen() {
         <View style={{ flex: 1, width: '100%' }}>
           <View
             style={{
-              flex: 0.55,
+              flex: 0.50,
               justifyContent: 'center',
               alignItems: 'center',
             }}
           ></View>
           <View
             style={{
-              flex: 0.45,
+              flex: 0.50,
               justifyContent: 'flex-start',
               alignItems: 'center',
               padding: theme.spacing.xl,
@@ -53,7 +53,7 @@ export default function LoginScreen() {
           >
             <View style={styles.logoContainer}>
               <Text style={[styles.logoText, { fontFamily: 'Sora_700Bold' }]}>Fique por dentro de possíveis áreas de risco</Text>
-              <Text style={[styles.logoSubText, { fontFamily: 'Sora_400Regular' }]}>Seja bem-vindo ao Alertaê, um sistema de monitoramento e prevenção de enchentes</Text>
+              <Text style={[styles.logoSubText, { fontFamily: 'Sora_400Regular' }]}>Seja bem-vindo ao Alertaê, um sistema de monitoramento e prevenção de enchentes, com foco em garantir segurança mesmo durante quedas de energia.</Text>
             </View>
             <TouchableOpacity
               style={styles.pillButton}

@@ -34,12 +34,12 @@ export default function SettingsScreen() {
 
   const sections: SettingsSection[] = [
     {
-      title: 'Preferences',
+      title: 'Preferências',
       items: [
         {
           id: 'notifications',
           icon: <BellRing size={22} color={theme.colors.primary[500]} />,
-          title: 'Notifications',
+          title: 'Notificações',
           type: 'switch',
           value: notifications,
           onToggle: () => setNotifications(!notifications),
@@ -47,7 +47,7 @@ export default function SettingsScreen() {
         {
           id: 'darkMode',
           icon: <Moon size={22} color={theme.colors.primary[500]} />,
-          title: 'Dark Mode',
+          title: 'Modo escuro',
           type: 'switch',
           value: darkMode,
           onToggle: () => setDarkMode(!darkMode),
@@ -55,18 +55,18 @@ export default function SettingsScreen() {
       ],
     },
     {
-      title: 'Support',
+      title: 'Suporte',
       items: [
         {
           id: 'help',
           icon: <HelpCircle size={22} color={theme.colors.primary[500]} />,
-          title: 'Help Center',
+          title: 'Central de Ajuda',
           type: 'link',
         },
         {
           id: 'contact',
           icon: <Mail size={22} color={theme.colors.primary[500]} />,
-          title: 'Contact Us',
+          title: 'Fale Conosco',
           type: 'link',
         },
       ],
@@ -77,13 +77,13 @@ export default function SettingsScreen() {
         {
           id: 'privacy',
           icon: <ShieldCheck size={22} color={theme.colors.primary[500]} />,
-          title: 'Privacy Policy',
+          title: 'Política de Privacidade',
           type: 'link',
         },
         {
           id: 'terms',
           icon: <FileText size={22} color={theme.colors.primary[500]} />,
-          title: 'Terms of Service',
+          title: 'Termos de Serviço',
           type: 'link',
         },
       ],
@@ -147,12 +147,12 @@ export default function SettingsScreen() {
         <View style={styles.logoutSection}>
           <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
             <LogOut size={20} color={theme.colors.error[500]} />
-            <Text style={styles.logoutText}>Log Out</Text>
+            <Text style={styles.logoutText}>Sair</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.versionContainer}>
-          <Text style={styles.versionText}>Version 1.0.0</Text>
+          <Text style={styles.versionText}>Versão 1.0.0</Text>
         </View>
       </ScrollView>
     </SafeAreaWrapper>

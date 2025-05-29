@@ -14,8 +14,8 @@ export default function ProfileScreen() {
   const [loading, setLoading] = useState(false);
   const [lastLogin, setLastLogin] = useState<Date | null>(null);
   const [cepData, setCepData] = useState<any>(null); // Estado para guardar o endereço do CEP
-  const email = user?.email || 'No email';
-  const username = user?.user_metadata.first_name || 'User';
+  const email = user?.email || 'Sem e-mail';
+  const username = user?.user_metadata.first_name || 'Usuário';
   const avatar = user?.user_metadata?.avatar_url || 'https://images.pexels.com/photos/1270076/pexels-photo-1270076.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2';
   console.log('User:', user);
   console.log('Avatar:', avatar);
@@ -51,8 +51,8 @@ export default function ProfileScreen() {
   }, [user, cepData]);
 
   const formatDate = (date: Date | null) => {
-    if (!date) return 'Unknown';
-    return date.toLocaleDateString('en-US', {
+    if (!date) return 'Desconhecido';
+    return date.toLocaleDateString('pt-BR', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
@@ -86,64 +86,56 @@ export default function ProfileScreen() {
         </Animated.View>
 
         <View style={styles.infoSection}>
-          <Text style={styles.sectionTitle}>Account Information</Text>
-          
+          <Text style={styles.sectionTitle}>Informações da Conta</Text>
           <View style={styles.infoContainer}>
             <InfoItem 
               icon={<UserIcon size={20} color={theme.colors.primary[500]} />}
-              label="Username"
+              label="Nome de usuário"
               value={username}
               delay={100}
             />
-            
             <InfoItem 
               icon={<AtSign size={20} color={theme.colors.primary[500]} />}
-              label="Email"
+              label="E-mail"
               value={email}
               delay={200}
             />
-            
             <InfoItem 
               icon={<Clock size={20} color={theme.colors.primary[500]} />}
-              label="Last Login"
+              label="Último login"
               value={formatDate(lastLogin)}
               delay={300}
             />
-
             <InfoItem 
               icon={<Edit2 size={20} color={theme.colors.primary[500]} />}
-              label="Complete Name"
-              value={user?.user_metadata.last_name || 'No complete name'}
+              label="Nome completo"
+              value={user?.user_metadata.last_name || 'Sem nome completo'}
               delay={400}
             />
-
             <InfoItem 
               icon={<Edit2 size={20} color={theme.colors.primary[500]} />}
-              label="Telephone"
-              value={user?.user_metadata.telephone || 'No telephone'}
+              label="Telefone"
+              value={user?.user_metadata.telephone || 'Sem telefone'}
               delay={500}
             />
-
             <InfoItem 
               icon={<Edit2 size={20} color={theme.colors.primary[500]} />}
-              label="CEP Cadastrado"
-              value={user?.user_metadata.address || 'No address'}
+              label="CEP cadastrado"
+              value={user?.user_metadata.address || 'Sem endereço'}
               delay={600}
             />
-
             {cepData && (
               <InfoItem 
                 icon={<Edit2 size={20} color={theme.colors.primary[500]} />}
                 label="Logradouro"
-                value={cepData.logradouro || 'No logradouro'}
+                value={cepData.logradouro || 'Sem logradouro'}
                 delay={700}
               />
             )}
-            
             <InfoItem 
               icon={<Shield size={20} color={theme.colors.primary[500]} />}
-              label="Account Status"
-              value="Active"
+              label="Status da conta"
+              value="Ativa"
               delay={400}
             />
           </View>

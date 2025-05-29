@@ -9,7 +9,7 @@ import HomeScreen from '@/app/(app)/index';
 import NotificationsScreen from '@/app/(app)/notifications';
 import SettingsScreen from '@/app/(app)/settings';
 import ProfileScreen from '@/app/(app)/profile';
-import SummaryScreen from '@/app/(app)/summary';
+import guidelinesScreen from '@/app/(app)/guidelines';
 import MapScreen from '@/app/(app)/map';
 
 const Tab = createBottomTabNavigator();
@@ -40,14 +40,14 @@ export default function AppLayout() {
           if (route.name === 'Notifications') iconName = 'bell';
           if (route.name === 'Settings') iconName = 'settings';
           if (route.name === 'Profile') iconName = 'user';
-          if (route.name === 'Summary') iconName = 'search';
+          if (route.name === 'guidelines') iconName = 'search';
           return <Feather name={iconName} size={size} color={color} />;
         },
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
       <Tab.Screen name="Map" component={MapScreen} options={{ headerShown: false }} />
-      <Tab.Screen name="Summary" component={SummaryScreen} options={{ headerShown: false }} />
+      <Tab.Screen name="guidelines" component={guidelinesScreen} options={{ headerShown: false }} />
       <Tab.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: false }} />
       <Tab.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
       <Tab.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
