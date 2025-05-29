@@ -6,7 +6,6 @@ import { useFrameworkReady } from '@/hooks/useFrameworkReady';
 import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { supabase } from '@/lib/supabase';
-import { FormProvider } from '@/contexts/FormContext';
 import { ReactNode } from 'react';
 
 
@@ -67,10 +66,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <SafeAreaProvider>
       <AuthProvider>
-        <FormProvider>
           <RootLayoutNav />
           {children}
-        </FormProvider>
       </AuthProvider>
       <StatusBar style="auto" />
     </SafeAreaProvider>

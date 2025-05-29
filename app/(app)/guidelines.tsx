@@ -79,7 +79,7 @@ export default function PowerOutageGuidelinesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: theme.colors.neutrals[50],
     marginTop: theme.spacing.lg,
   },
   content: {

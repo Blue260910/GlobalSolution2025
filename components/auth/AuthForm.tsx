@@ -84,7 +84,6 @@ export const AuthForm: React.FC<AuthFormProps> = ({
       setValue('profileImage', result.assets[0].uri); 
     }
 
-    console.log(result);
   };
   
 

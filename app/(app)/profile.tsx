@@ -17,8 +17,6 @@ export default function ProfileScreen() {
   const email = user?.email || 'Sem e-mail';
   const username = user?.user_metadata.first_name || 'Usuário';
   const avatar = user?.user_metadata?.avatar_url || 'https://images.pexels.com/photos/1270076/pexels-photo-1270076.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2';
-  console.log('User:', user);
-  console.log('Avatar:', avatar);
   
   // Get user metadata
   useEffect(() => {
@@ -29,7 +27,6 @@ export default function ProfileScreen() {
     // Busca o endereço do CEP apenas se ainda não buscou e se existe um CEP
     if (user?.user_metadata?.address && !cepData) {
       async function buscarCep(cep: string) {
-        console.log('Buscando CEP:', cep);
         const res = await fetch("https://oziwendirtmqquvqkree.supabase.co/functions/v1/CEP-Finder", {
           method: "POST",
           headers: { 
@@ -41,7 +38,6 @@ export default function ProfileScreen() {
 
         const data = await res.json();
         setCepData(data); // Salva o resultado no estado
-        console.log('Dados do CEP:', data);
       }
       buscarCep(user.user_metadata.address.replace(/\D/g, ''))
         .catch(error => {

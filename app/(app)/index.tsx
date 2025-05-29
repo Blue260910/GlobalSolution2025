@@ -7,7 +7,6 @@ import { Bell, Search, Calendar, CheckCheck, TrendingUp, Heart, ArrowRight } fro
 import Animated, { FadeInDown, FadeInRight } from 'react-native-reanimated';
 import { router } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
-import { useFormContext } from '../../contexts/FormContext';
 import { useEffect } from 'react';
 import { StockSearchModal } from '../../components/ui/StockSearchModal';
 import { useState } from 'react';
@@ -22,10 +21,6 @@ import { WeatherMetric } from '../../components/data/weatherData';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
-  const {recuperarDados} = useFormContext();
-  useEffect(() => {
-    if (recuperarDados) recuperarDados()
-  }, []);
 
   const [isSearchButtonExpand, setisSearchButtonExpand] = useState(false);
 
@@ -34,11 +29,7 @@ export default function HomeScreen() {
   }
 
   const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
-  const [searchText, setSearchText] = useState('');
-  
-
-  const { formState } = useFormContext();
-  
+  const [searchText, setSearchText] = useState('');  
 
   const { user } = useAuth();
 

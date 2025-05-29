@@ -7,7 +7,6 @@ import { Bell, Search, Calendar, CheckCheck, TrendingUp, Heart, ArrowRight } fro
 import Animated, { FadeInDown, FadeInRight } from 'react-native-reanimated';
 import { router } from 'expo-router';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { useFormContext } from '../../contexts/FormContext';
 import { useEffect } from 'react';
 import { StockSearchModal } from '../../components/ui/StockSearchModal';
 import { useState } from 'react';
@@ -42,7 +41,6 @@ const MessageContext = createContext<MessageContextProps | undefined>(undefined)
 
 export default function MapScreen() {
   const navigation = useNavigation();
-  const { recuperarDados } = useFormContext();
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [location, setLocation] = useState<{ lat: string; long: string }>({ lat: '0', long: '0' });
@@ -61,18 +59,13 @@ export default function MapScreen() {
     setLoading(false);
   }, []);
 
-  // Recarrega ao montar
-  useEffect(() => {
-    loadMessages();
-    if (recuperarDados) recuperarDados();
-  }, []);
+
 
   // Use useFocusEffect para garantir recarregamento ao focar na aba
   useFocusEffect(
     React.useCallback(() => {
       loadMessages();
-      if (recuperarDados) recuperarDados();
-    }, [loadMessages, recuperarDados])
+    }, [loadMessages])
   );
 
   const [isSearchButtonExpand, setisSearchButtonExpand] = useState(false);
@@ -82,11 +75,7 @@ export default function MapScreen() {
   }
 
   const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
-  const [searchText, setSearchText] = useState('');
-  
-
-  const { formState } = useFormContext();
-  
+  const [searchText, setSearchText] = useState('');  
 
   const { user } = useAuth();
   // Get first part of email as username
@@ -170,7 +159,7 @@ export default function MapScreen() {
           />
           <Animated.View style={styles.bannerContent} entering={FadeInDown}>
             <Text style={styles.bannerTitle}>Bem vindo ao mapa </Text>
-            <Text style={styles.bannerDescription}>Veja relatos de apagões e acompanhe as reclamações de outros usuários em tempo real.</Text>
+            <Text style={styles.bannerDescription}>Veja relatos de apagões e acompanhe as alertas de outros usuários em tempo real.</Text>
           </Animated.View>
         </View>
         
@@ -179,19 +168,17 @@ export default function MapScreen() {
           {/* Card 1: Total de mensagens ativas */}
           <View style={{ flex: 1, backgroundColor: '#fff', borderRadius: 12, padding: 16, alignItems: 'center', ...theme.shadows.small }}>
             <Text style={{ fontSize: 32, fontWeight: 'bold', color: theme.colors.primary[500] }}>{messages.length}</Text>
-            <Text style={{ color: theme.colors.neutrals[700], fontSize: 14, marginTop: 4 }}>Mensagens Ativas</Text>
+            <Text style={{ color: theme.colors.neutrals[700], fontSize: 14, marginTop: 4, textAlign: 'center' }}>Alertas Ativos</Text>
           </View>
           {/* Card 2: Tempo total das reclamações */}
           <View style={{ flex: 1, backgroundColor: '#fff', borderRadius: 12, padding: 16, alignItems: 'center', ...theme.shadows.small }}>
             {/* Tempo total das mensagens ativas */}
             {messages.length > 0 ? (() => {
-              // Função para converter '27-05-2025-15-43-07' para Date
               const parseCustomDate = (str: string) => {
                 if (!str) return null;
                 const [dia, mes, ano, hora, min, seg] = str.split('-');
                 return new Date(`${ano}-${mes}-${dia}T${hora}:${min}:${seg}`);
               };
-              // Pega a mensagem ativa mais antiga
               const oldest = messages.reduce((min, msg) => {
                 const minDate = parseCustomDate(min.horarioDeEnvio);
                 const msgDate = parseCustomDate(msg.horarioDeEnvio);
@@ -204,7 +191,7 @@ export default function MapScreen() {
                   <>
                     <Text style={{ fontSize: 32, fontWeight: 'bold', color: theme.colors.primary[500] }}>0min</Text>
                     <Text style={{ color: theme.colors.neutrals[700], fontSize: 14, marginTop: 4 }}>
-                      Tempo total das mensagens
+                      Tempo total de impacto	
                     </Text>
                   </>
                 );
@@ -225,16 +212,16 @@ export default function MapScreen() {
                   <Text style={{ fontSize: 32, fontWeight: 'bold', color: theme.colors.primary[500] }}>
                     {tempoStr}
                   </Text>
-                  <Text style={{ color: theme.colors.neutrals[700], fontSize: 14, marginTop: 4 }}>
-                    Tempo total das mensagens
+                  <Text style={{ color: theme.colors.neutrals[700], fontSize: 14, marginTop: 4, textAlign: 'center' }}>
+                    Tempo total de impacto
                   </Text>
                 </>
               );
             })() : (
               <>
                 <Text style={{ fontSize: 32, fontWeight: 'bold', color: theme.colors.primary[500] }}>0min</Text>
-                <Text style={{ color: theme.colors.neutrals[700], fontSize: 14, marginTop: 4 }}>
-                  Tempo total das mensagens
+                <Text style={{ color: theme.colors.neutrals[700], fontSize: 14, marginTop: 4, textAlign: 'center' }}>
+                  Tempo total de impacto
                 </Text>
               </>
             )}
