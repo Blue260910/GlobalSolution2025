@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Types for our context
 type AuthContextType = {
@@ -22,20 +23,30 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Effect to load and set session
   useEffect(() => {
+    // Função auxiliar para salvar o display_name
+    const saveDisplayName = async (user: User | null) => {
+      if (user?.user_metadata?.first_name) {
+        await AsyncStorage.setItem('display_name', user.user_metadata.first_name);
+      } else {
+        await AsyncStorage.removeItem('display_name');
+      }
+    };
+
     // Get the initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
       setIsLoading(false);
+      await saveDisplayName(session?.user ?? null);
     });
 
     // Set up a listener for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
       setIsLoading(false);
+      await saveDisplayName(session?.user ?? null);
     });
 
     // Cleanup subscription

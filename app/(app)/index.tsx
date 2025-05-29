@@ -11,6 +11,8 @@ import { useFormContext } from '../../contexts/FormContext';
 import { useEffect } from 'react';
 import { StockSearchModal } from '../../components/ui/StockSearchModal';
 import { useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 import WeatherCard from '../../components/WeatherCard';
 import { getWeatherMetrics } from '../../components/data/weatherData';
@@ -39,13 +41,15 @@ export default function HomeScreen() {
   
 
   const { user } = useAuth();
-  
-  // Get first part of email as username
-  const username = user?.user_metadata.first_name || 'User';
+
+  const [displayName, setDisplayName] = useState<string | 'User'>('User');
 
   const [weatherMetrics, setWeatherMetrics] = useState<WeatherMetric[] | null>(null);
 
   useEffect(() => {
+    AsyncStorage.getItem('display_name').then((name) => {
+      setDisplayName(name ?? 'User');
+    });
     getWeatherMetrics().then(setWeatherMetrics);
   }, []);
 
@@ -59,7 +63,7 @@ export default function HomeScreen() {
         <View style={styles.header}>
           <View>
             <Text style={[styles.greeting, isSearchButtonExpand && { display: "none", }]}   >Good morning,</Text>
-            <Text style={[styles.username, isSearchButtonExpand && { display: "none", }]} >{username.charAt(0).toUpperCase() + username.slice(1).toLowerCase()}</Text>
+            <Text style={[styles.username, isSearchButtonExpand && { display: "none", }]} >{displayName.charAt(0).toUpperCase() + displayName.slice(1).toLowerCase()}</Text>
           </View>
           <View style={styles.headerIcons}>
           <TouchableOpacity
