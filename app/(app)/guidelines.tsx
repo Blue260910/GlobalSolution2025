@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
   },
   expandIcon: {
     fontSize: 18,
-    color: '#2563EB',
+    color: theme.colors.primary[500],
     marginLeft: 8,
   },
   card: {

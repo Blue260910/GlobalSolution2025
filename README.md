@@ -42,6 +42,49 @@ Bem-vindo ao Alertaê! Este projeto foi desenvolvido para o Global Solution 2025
 
 ---
 
+## 🖥️ Descrição das Telas
+
+### Tela de Mapa
+- Exibe um mapa interativo com todos os alertas ativos como marcadores.
+- Mostra um círculo dinâmico envolvendo todos os marcadores.
+- Cards no topo mostram o total de alertas ativos e o tempo total de impacto.
+- Botão/flutuante para adicionar novo alerta.
+- Ao tocar em um marcador, exibe detalhes do alerta e o avatar do usuário.
+- Permite busca e filtragem de mensagens/alertas.
+- Modal de busca: permite pesquisar alertas por localidade ou palavra-chave.
+
+### Tela de Mensagens
+- Lista todos os alertas/mensagens enviados pelos usuários.
+- Cada mensagem pode ser expandida para ver detalhes.
+- Botão para criar nova mensagem/alerta.
+- Modal de criação de mensagem: formulário para inserir título, descrição, localização e avatar.
+- Botão para alternar o status do alerta (ativo/resolvido).
+- Modal de confirmação ao alternar status.
+- Botão para deletar mensagem (com confirmação).
+- Feedback visual para ações (sucesso/erro).
+
+### Tela de Diretrizes (Guidelines)
+- Exibe orientações e boas práticas em caso de falta de energia.
+- Conteúdo organizado em seções expansíveis (accordion) para facilitar a leitura.
+- Cada seção traz dicas práticas para antes, durante e após apagões, além de dicas gerais de segurança.
+
+### Tela de Perfil
+- Exibe informações do usuário logado.
+- Permite editar dados pessoais e avatar.
+- Botão para logout.
+
+### Tela de Notificações
+- Lista notificações relevantes sobre novos alertas, atualizações e mensagens do sistema.
+
+### Tela de Configurações
+- Permite ajustar preferências do app, como notificações, tema e privacidade.
+
+### Telas de Autenticação
+- Login, cadastro, recuperação de senha e onboarding.
+- Modais para feedback de sucesso/erro.
+
+---
+
 ## 🗺️ Estrutura do Projeto
 ```
 GlobalSolution2025/
