@@ -4,7 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { theme } from '@/lib/theme';
 import { Feather } from '@expo/vector-icons';
 
-// Importando suas telas
+
 import HomeScreen from '@/app/(app)/index';
 import NotificationsScreen from '@/app/(app)/notifications';
 import SettingsScreen from '@/app/(app)/settings';
@@ -26,12 +26,12 @@ export default function AppLayout() {
         tabBarActiveTintColor: theme.colors.primary[500],
         tabBarInactiveTintColor: theme.colors.neutrals[400],
         tabBarStyle: {
-          height: 50, // Altere aqui a altura
-          backgroundColor: theme.colors.neutrals[100], // Exemplo de cor de fundo
-          borderTopLeftRadius: 20, // Exemplo de borda arredondada
+          height: 50, 
+          backgroundColor: theme.colors.neutrals[100], 
+          borderTopLeftRadius: 20, 
           borderTopRightRadius: 20,
-          paddingBottom: 10, // Espaço extra para ícones
-          paddingTop: 5, // Espaço extra para ícones
+          paddingBottom: 10, 
+          paddingTop: 5, 
         },
         tabBarIcon: ({ color, size }) => {
           let iconName: keyof typeof Feather.glyphMap = 'home';
@@ -40,7 +40,7 @@ export default function AppLayout() {
           if (route.name === 'Notifications') iconName = 'bell';
           if (route.name === 'Settings') iconName = 'settings';
           if (route.name === 'Profile') iconName = 'user';
-          if (route.name === 'guidelines') iconName = 'search';
+          if (route.name === 'guidelines') iconName = 'book';
           return <Feather name={iconName} size={size} color={color} />;
         },
       })}

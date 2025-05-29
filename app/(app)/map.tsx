@@ -16,7 +16,7 @@ import { Feather } from '@expo/vector-icons';
 import WeatherCard from '../../components/WeatherCard';
 import { getWeatherMetrics } from '../../components/data/weatherData';
 import { WeatherMetric } from '../../components/data/weatherData';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, Circle } from 'react-native-maps';
 
 import * as messageService from '../../services/messageService';
 import { Message, MessageFormData } from '../../types/index';
@@ -105,6 +105,46 @@ export default function MapScreen() {
     latitudeDelta: 0.01,
     longitudeDelta: 0.01,
   };
+
+  // Função para calcular centro e raio
+  function getCircleProps(messages: Message[]) {
+    const coords = messages
+      .filter(msg => msg.lat && msg.long)
+      .map(msg => ({
+        latitude: Number(msg.lat),
+        longitude: Number(msg.long),
+      }));
+
+    if (coords.length === 0) return null;
+
+    // Centro: média das coordenadas
+    const center = {
+      latitude: coords.reduce((sum, c) => sum + c.latitude, 0) / coords.length,
+      longitude: coords.reduce((sum, c) => sum + c.longitude, 0) / coords.length,
+    };
+
+    // Raio: maior distância do centro até qualquer marker (em metros)
+    const toRad = (v: number) => (v * Math.PI) / 180;
+    const earthRadius = 6371000; // metros
+
+    const maxDist = Math.max(
+      ...coords.map(c => {
+        const dLat = toRad(c.latitude - center.latitude);
+        const dLon = toRad(c.longitude - center.longitude);
+        const a =
+          Math.sin(dLat / 2) ** 2 +
+          Math.cos(toRad(center.latitude)) *
+            Math.cos(toRad(c.latitude)) *
+            Math.sin(dLon / 2) ** 2;
+        const c2 = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return earthRadius * c2;
+      })
+    );
+
+    return { center, radius: maxDist + 100 }; // 100m extra para folga
+  }
+
+  const circleProps = getCircleProps(messages);
 
   if (Platform.OS === 'web') {
     return (
@@ -228,12 +268,20 @@ export default function MapScreen() {
                           borderWidth: 3,
                           backgroundColor: '#fff',
                           borderRadius: 30, // deixa a imagem redonda
-                          // Adicione aqui outros estilos que quiser
                         }}
                         resizeMode="cover"
                       />
                   </Marker>
                 ) : null
+              )}
+              {circleProps && (
+                <Circle
+                  center={circleProps.center}
+                  radius={circleProps.radius}
+                  strokeColor="#238CA4"
+                  fillColor="rgba(35,140,164,0.1)"
+                  strokeWidth={2}
+                />
               )}
             </MapView>
           ) : (

@@ -21,7 +21,7 @@ import { theme } from '@/lib/theme';
 import { on } from 'events';
 
 import * as ImagePicker from 'expo-image-picker';
-import { Camera, Pencil } from 'lucide-react-native'; // certifique-se de ter esse pacote instalado
+import { Camera, Pencil } from 'lucide-react-native'; 
 
 
 interface AuthFormProps {
@@ -56,7 +56,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
       completeName: '',
       telephone: '',
       address: '',
-      profileImage: '', // <-- ADICIONE O CAMPO profileImage
+      profileImage: '', 
     },
   });
 
@@ -81,14 +81,14 @@ export const AuthForm: React.FC<AuthFormProps> = ({
 
     if (!result.canceled) {
       setProfileImage(result.assets[0].uri);
-      setValue('profileImage', result.assets[0].uri); // <-- ATUALIZE O VALOR NO FORMULÁRIO
+      setValue('profileImage', result.assets[0].uri); 
     }
 
     console.log(result);
   };
   
 
-  // Form configuration based on type
+  
   const formConfig = {
     login: {
       title: 'Bem-vindo de volta',
@@ -119,7 +119,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
     },
   }[type];
 
-  // NOVO: Mostrar todos os campos de login direto, sem steps
+  
   if (type === 'login') {
     return (
       <KeyboardAvoidingView
@@ -244,16 +244,16 @@ export const AuthForm: React.FC<AuthFormProps> = ({
                     label="Telefone"
                     value={value}
                     onChangeText={text => {
-                      // Remove tudo que não for número
+                      
                       let cleaned = text.replace(/\D/g, '');
-                      // Aplica a máscara (XX) XXXXX-XXXX
+                      
                       if (cleaned.length > 2) {
                         cleaned = `(${cleaned.slice(0, 2)}) ${cleaned.slice(2)}`;
                       }
                       if (cleaned.length > 10) {
                         cleaned = `${cleaned.slice(0, 10)}-${cleaned.slice(10, 14)}`;
                       }
-                      // Limita a 15 caracteres (formato completo)
+                      
                       cleaned = cleaned.slice(0, 15);
                       onChange(cleaned);
                     }}
@@ -278,9 +278,9 @@ export const AuthForm: React.FC<AuthFormProps> = ({
                     label="CEP"
                     value={value}
                     onChangeText={text => {
-                      // Remove tudo que não for número
+                      
                       let cleaned = text.replace(/\D/g, '');
-                      // Aplica a máscara do CEP: 12345-678
+                      
                       if (cleaned.length > 5) {
                         cleaned = cleaned.slice(0, 5) + '-' + cleaned.slice(5, 8);
                       }
@@ -301,18 +301,18 @@ export const AuthForm: React.FC<AuthFormProps> = ({
               title={formConfig.buttonText}
               onPress={handleSubmit(
                 () => {
-                  // Sucesso: pode avançar
+                  
                   setStep(2);
                 },
                 (formErrors) => {
-                  // Se NÃO houver erro em address, telephone ou completeName, avança
+                  
                   if (!formErrors.address && !formErrors.telephone && !formErrors.completeName) {
                     clearErrors();
                     setStep(2);
 
                   }
-                  // Se quiser, pode exibir os erros aqui
-                  // console.log(formErrors);
+                  
+                  
                 }
               )}
               loading={isLoading}
@@ -367,18 +367,18 @@ export const AuthForm: React.FC<AuthFormProps> = ({
               title="Enviar"
               onPress={handleSubmit(
                 () => {
-                  // Sucesso: pode avançar
+                  
                   setStep(2);
                 },
                 (formErrors) => {
-                  // Se NÃO houver erro em address, telephone ou completeName, avança
+                  
                   if (!formErrors.nickname) {
                     clearErrors();
                     setStep(3);
 
                   }
-                  // Se quiser, pode exibir os erros aqui
-                  // console.log(formErrors);
+                  
+                  
                 }
               )}
               loading={isLoading}

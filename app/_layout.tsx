@@ -9,26 +9,26 @@ import { supabase } from '@/lib/supabase';
 import { FormProvider } from '@/contexts/FormContext';
 import { ReactNode } from 'react';
 
-// Prevent the splash screen from auto-hiding
+
 SplashScreen.preventAutoHideAsync();
 
-// Root layout wrapper that provides auth context
+
 function RootLayoutNav() {
   const { session, isLoading } = useAuth();
   const [appIsReady, setAppIsReady] = useState(false);
 
   useFrameworkReady();
 
-  // Effect to prepare app and hide splash screen
+  
   useEffect(() => {
     async function prepare() {
       try {
-        // Add any app initialization logic here
-        await new Promise(resolve => setTimeout(resolve, 500)); // Simulating initialization
+        
+        await new Promise(resolve => setTimeout(resolve, 500)); 
       } catch (e) {
         console.warn(e);
       } finally {
-        // Tell the app to render
+        
         setAppIsReady(true);
       }
     }
@@ -36,19 +36,19 @@ function RootLayoutNav() {
     prepare();
   }, []);
 
-  // Effect to hide the splash screen
+  
   useEffect(() => {
     if (appIsReady && !isLoading) {
       SplashScreen.hideAsync();
     }
   }, [appIsReady, isLoading]);
 
-  // Show nothing while both loading states are active
+  
   if (!appIsReady || isLoading) {
     return null;
   }
 
-  // Redirect based on authentication state
+  
   return (
     <Stack screenOptions={{ headerShown: false, animation: 'fade' }}>
       <Stack.Screen name="(auth)" options={{ headerShown: false }} />
@@ -57,7 +57,7 @@ function RootLayoutNav() {
   );
 }
 
-// Root layout component
+
 interface RootLayoutProps {
   children: ReactNode;
 }

@@ -3,16 +3,16 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 
 
-// Define the form state interface
+
 export interface FormState {
-  // Personal Information
+  
   fullName: string;
   email: string;
-  documentId: string; // CPF
+  documentId: string; 
   birthDate: string;
   phone: string;
 
-  // Financial Profile
+  
   monthlyIncome: string;
   totalAssets: string;
   investmentAmount: string;
@@ -21,7 +21,7 @@ export interface FormState {
     amount: string;
   };
 
-  // Investor Profile (Suitability)
+  
   knowledgeLevel: 'beginner' | 'intermediate' | 'advanced' | '';
   riskTolerance: 'conservative' | 'moderate' | 'aggressive' | '';
   objectives: {
@@ -34,7 +34,7 @@ export interface FormState {
   };
   investmentHorizon: 'short' | 'medium' | 'long' | '';
 
-  // Personal Preferences
+  
   liquidityPreference: 'high' | 'medium' | 'low' | '';
   esgInterest: boolean;
   previousInvestmentExperience: boolean;
@@ -49,7 +49,7 @@ export interface FormState {
     otherText: string;
   };
 
-  // Terms and Consents
+  
   termsAccepted: boolean;
   dataUseConsent: boolean;
 }
@@ -57,16 +57,16 @@ export interface FormState {
 
 
 
-// Initial state
+
 const initialState: FormState = {
-  // Personal Information
+  
   fullName: '',
   email: '',
   documentId: '',
   birthDate: '',
   phone: '',
 
-  // Financial Profile
+  
   monthlyIncome: '',
   totalAssets: '',
   investmentAmount: '',
@@ -75,7 +75,7 @@ const initialState: FormState = {
     amount: '',
   },
 
-  // Investor Profile
+  
   knowledgeLevel: '',
   riskTolerance: '',
   objectives: {
@@ -88,7 +88,7 @@ const initialState: FormState = {
   },
   investmentHorizon: '',
 
-  // Personal Preferences
+  
   liquidityPreference: '',
   esgInterest: false,
   previousInvestmentExperience: false,
@@ -103,18 +103,18 @@ const initialState: FormState = {
     otherText: '',
   },
 
-  // Terms and Consents
+  
   termsAccepted: false,
   dataUseConsent: false,
 };
 
-// Define action types
+
 type FormAction =
   | { type: 'UPDATE_FIELD'; field: keyof FormState; value: any }
   | { type: 'UPDATE_NESTED_FIELD'; parent: keyof FormState; field: string; value: any }
   | { type: 'RESET_FORM' };
 
-// Reducer function
+
 function formReducer(state: FormState, action: FormAction): FormState {
   switch (action.type) {
     case 'UPDATE_FIELD':
@@ -140,14 +140,14 @@ function formReducer(state: FormState, action: FormAction): FormState {
   }
 }
 
-// Create context
+
 interface FormContextType {
   formState: FormState;
   updateField: (field: keyof FormState, value: any) => void;
   updateNestedField: (parent: keyof FormState, field: string, value: any) => void;
   resetForm: () => void;
-  salvarDados?: () => void; // <-- Adicione aqui
-  recuperarDados?: () => void; // <-- Adicione aqui
+  salvarDados?: () => void; 
+  recuperarDados?: () => void; 
 
 }
 
@@ -155,9 +155,9 @@ interface FormContextType {
 
 const FormContext = createContext<FormContextType | undefined>(undefined);
 
-// Provider component
+
 export function FormProvider({ children }: { children: React.ReactNode }) {
-  const { user } = useAuth(); // Use the auth context to get user data
+  const { user } = useAuth(); 
   if (user) {
     initialState.email = user.email || '';
     initialState.documentId = user.user_metadata.documentId || '';
@@ -177,15 +177,15 @@ export function FormProvider({ children }: { children: React.ReactNode }) {
     dispatch({ type: 'RESET_FORM' });
   };
 
-  // Function to save data (placeholder)
+  
   const salvarDados = async () => {
-    // Implement your save logic here
+    
     console.log('Dados salvos:', formState);
     formState.email = user?.email || '';
     const { error } = await supabase
       .from('user_profiles')
       .upsert({
-        id: user?.id,               // ID do auth.user
+        id: user?.id,               
         email: user?.email,
         cpf: formState.documentId,
         dados: formState
@@ -239,7 +239,7 @@ export function FormProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-// Custom hook to use the form context
+
 export function useFormContext() {
   const context = useContext(FormContext);
   if (context === undefined) {

@@ -8,16 +8,16 @@ import { BellRing, Moon, ShieldCheck, CircleHelp as HelpCircle, FileText, Mail, 
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
 export default function SettingsScreen() {
-  // Dummy state for switches
+  
   const [notifications, setNotifications] = React.useState(true);
   const [darkMode, setDarkMode] = React.useState(false);
 
   const handleLogout = async () => {
     await signOut();
-    // No need to navigate, signOut already handles this
+    
   };
 
-  // Settings sections
+  
   type SettingsItem = {
     id: string;
     icon: React.ReactNode;
