@@ -22,7 +22,7 @@ export default function WeatherCard({ data }: WeatherCardProps) {
   const getGradientColors = (): [string, string] => {
     // Verifica se já passou das 18h
     const now = new Date();
-    const darkMode = now.getHours() >= 188;
+    const darkMode = now.getHours() >= 18;
     const type = data.type;
     if (darkMode) {
       switch (type) {

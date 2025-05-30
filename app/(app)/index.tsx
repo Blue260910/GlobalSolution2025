@@ -16,6 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import WeatherCard from '../../components/WeatherCard';
 import { getWeatherMetrics } from '../../components/data/weatherData';
 import { WeatherMetric } from '../../components/data/weatherData';
+import { useAlertPollingRealtime } from '../../hooks/useAlertPolling';
 
 
 
@@ -43,6 +44,8 @@ export default function HomeScreen() {
     });
     getWeatherMetrics().then(setWeatherMetrics);
   }, []);
+
+  useAlertPollingRealtime();
 
   return (
     <SafeAreaWrapper style={styles.container}>
