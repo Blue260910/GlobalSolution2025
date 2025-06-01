@@ -278,6 +278,7 @@ const styles = StyleSheet.create({
   },
   menuText: {
     marginLeft: spacing.sm,
+    paddingRight: spacing.sm,
     color: colors.text.primary,
     fontSize: typography.fontSize.sm
   },
