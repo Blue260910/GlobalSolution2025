@@ -12,6 +12,9 @@ import { router } from 'expo-router';
 import { SafeAreaWrapper } from '@/components/ui/SafeAreaWrapper';
 import { theme } from '@/lib/theme';
 import Animated from 'react-native-reanimated';
+import { LogBox } from 'react-native';
+
+
 
 export default function LoginScreen() {
   const [fontsLoaded] = useFonts({
@@ -19,6 +22,10 @@ export default function LoginScreen() {
     Sora_500Medium,
     Sora_700Bold,
   });
+
+  LogBox.ignoreLogs([
+    'expo-notifications: Android Push notifications (remote notifications) functionality provided by expo-notifications was removed from Expo Go',
+  ]);
 
   if (!fontsLoaded) {
     return <AppLoading />;
