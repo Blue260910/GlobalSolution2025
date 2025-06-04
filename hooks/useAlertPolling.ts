@@ -1,8 +1,10 @@
+import React from 'react';
 import { useEffect, useRef } from 'react';
 import * as Notifications from 'expo-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from '../lib/supabase';
 import { ToastAndroid, Platform } from 'react-native';
+
 
 const LAST_ALERT_ID_KEY = 'lastAlertId';
 
@@ -117,4 +119,16 @@ export function useAlertPollingRealtime() {
       supabase.removeChannel(subscription);
     };
   }, []);
+}
+
+export default function SettingsScreen() {
+  const [notifications, setNotifications] = React.useState(true);
+  // ...existing code...
+
+  // Só ativa o polling se notificações estiverem ligadas
+  if (notifications) {
+    useAlertPolling();
+  }
+
+  // ...existing code...
 }
