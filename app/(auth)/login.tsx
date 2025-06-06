@@ -53,13 +53,6 @@ export default function LoginScreen() {
             <Text style={styles.footerLink}>Cadastre-se</Text>
           </TouchableOpacity>
         </View>
-
-        <TouchableOpacity
-          style={styles.forgotPassword}
-          onPress={() => router.push('/(auth)/reset-password')}
-        >
-          <Text style={styles.forgotPasswordText}>Esqueceu a senha?</Text>
-        </TouchableOpacity>
       </Animated.View>
     </SafeAreaWrapper>
   );
@@ -105,15 +98,6 @@ const styles = StyleSheet.create({
   footerLink: {
     fontFamily: theme.typography.fontFamily.medium,
     fontSize: theme.typography.fontSize.md,
-    color: theme.colors.primary[500],
-  },
-  forgotPassword: {
-    marginTop: theme.spacing.md,
-    padding: theme.spacing.sm,
-  },
-  forgotPasswordText: {
-    fontFamily: theme.typography.fontFamily.medium,
-    fontSize: theme.typography.fontSize.sm,
     color: theme.colors.primary[500],
   },
 });

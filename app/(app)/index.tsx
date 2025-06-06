@@ -23,12 +23,6 @@ import { useAlertPollingRealtime } from '../../hooks/useAlertPolling';
 export default function HomeScreen() {
   const navigation = useNavigation();
 
-  const [isSearchButtonExpand, setisSearchButtonExpand] = useState(false);
-
-  const toogleSearchButtonExpand = () => {
-    setisSearchButtonExpand(!isSearchButtonExpand);
-  }
-
   const [isSearchModalVisible, setIsSearchModalVisible] = useState(false);
   const [searchText, setSearchText] = useState('');  
 
@@ -56,20 +50,10 @@ export default function HomeScreen() {
       >
         <View style={styles.header}>
           <View>
-            <Text style={[styles.greeting, isSearchButtonExpand && { display: "none", }]}   >Good morning,</Text>
-            <Text style={[styles.username, isSearchButtonExpand && { display: "none", }]} >{displayName.charAt(0).toUpperCase() + displayName.slice(1).toLowerCase()}</Text>
+            <Text style={[styles.greeting]}   >Good morning,</Text>
+            <Text style={[styles.username]} >{displayName.charAt(0).toUpperCase() + displayName.slice(1).toLowerCase()}</Text>
           </View>
           <View style={styles.headerIcons}>
-          <TouchableOpacity
-              style={[
-              styles.iconButtonSearch,
-              isSearchButtonExpand && { flex: 1, alignItems: 'flex-end', paddingRight: theme.spacing.sm, marginLeft: theme.spacing.sm },
-            ]}
-            onPress={() => toogleSearchButtonExpand()}
-            
-          >
-            <Search size={24} color={theme.colors.neutrals[800]} />
-          </TouchableOpacity>
             <StockSearchModal
               visible={isSearchModalVisible}
               searchText={searchText}

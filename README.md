@@ -1,13 +1,24 @@
-# 🌎 Alertaê - Global Solution 2025
+# 🌊 Alertaê - Global Solution 2025
 
-Bem-vindo ao Alertaê! Este projeto foi desenvolvido para o Global Solution 2025, com o objetivo de monitorar, relatar e acompanhar apagões e alertas de água/energia em tempo real, promovendo colaboração e informação entre usuários.
+Bem-vindo ao **Alertaê**!  
+Um sistema inovador para monitoramento, relato e acompanhamento de apagões e alertas de água/energia em tempo real, promovendo colaboração, prevenção e segurança para todos.
+
+---
 
 ## 🚀 Como rodar o projeto localmente
 
-1. **Pré-requisitos:**
-   - Node.js (recomendado v18+)
-   - Expo CLI (`npm install -g expo-cli`)
-   - Conta no Supabase (opcional para funcionalidades completas)
+**Pré-requisitos:**
+- Node.js (recomendado v18+)
+- Expo CLI (`npm install -g expo-cli`)
+- Conta no Supabase (opcional para funcionalidades completas)
+
+**Passos:**
+
+1. **Clone o repositório:**
+   ```bash
+   git clone https://github.com/seu-usuario/GlobalSolution2025.git
+   cd GlobalSolution2025
+   ```
 
 2. **Instale as dependências:**
    ```bash
@@ -18,10 +29,10 @@ Bem-vindo ao Alertaê! Este projeto foi desenvolvido para o Global Solution 2025
    ```bash
    npx expo start --tunnel -c
    ```
-   O parâmetro `--tunnel` facilita o acesso em dispositivos móveis.
+   > O parâmetro `--tunnel` facilita o acesso em dispositivos móveis.
 
-4. **Ajuste para Supabase (se necessário):**
-   Caso enfrente problemas com o Supabase, utilize a configuração abaixo no arquivo `metro.config.js`:
+4. **Configuração do Supabase (opcional):**
+   Caso enfrente problemas, adicione o seguinte ao `metro.config.js`:
    ```js
    const { getDefaultConfig } = require('expo/metro-config');
    const config = getDefaultConfig(__dirname);
@@ -32,69 +43,49 @@ Bem-vindo ao Alertaê! Este projeto foi desenvolvido para o Global Solution 2025
 ---
 
 ## 📱 Funcionalidades
-- Visualização de alertas ativos em um mapa interativo
-- Relato de novos apagões/alertas com localização e avatar
-- Círculo dinâmico envolvendo todos os marcadores no mapa
-- Resumo do tempo total de impacto dos alertas
-- Cards de clima e informações úteis
-- Autenticação de usuários
-- Interface moderna e responsiva
+
+- 🗺️ **Mapa Interativo:** Visualize alertas ativos em tempo real, com marcadores e círculo dinâmico.
+- 📢 **Relato de Alertas:** Envie novos alertas com localização e avatar.
+- ⏱️ **Resumo de Impacto:** Veja o tempo total dos alertas ativos.
+- 🌦️ **Cards de Clima:** Informações úteis e dicas rápidas.
+- 🔔 **Notificações:** Receba avisos importantes sobre novos alertas e atualizações.
+- 📋 **Diretrizes:** Boas práticas em caso de falta de energia, organizadas em seções expansíveis.
+- 👤 **Perfil:** Gerencie seus dados, avatar e preferências.
+- ⚙️ **Configurações:** Ajuste notificações, privacidade e tema.
+- 🔐 **Autenticação:** Login, cadastro, recuperação de senha e onboarding intuitivo.
 
 ---
 
-## 🖥️ Descrição das Telas
+## 🖥️ Telas do App
 
-### Tela de Mapa
-- Exibe um mapa interativo com todos os alertas ativos como marcadores.
-- Mostra um círculo dinâmico envolvendo todos os marcadores.
-- Cards no topo mostram o total de alertas ativos e o tempo total de impacto.
-- Botão/flutuante para adicionar novo alerta.
-- Ao tocar em um marcador, exibe detalhes do alerta e o avatar do usuário.
-- Permite busca e filtragem de mensagens/alertas.
-- Modal de busca: permite pesquisar alertas por localidade ou palavra-chave.
-
-### Tela de Mensagens
-- Lista todos os alertas/mensagens enviados pelos usuários.
-- Cada mensagem pode ser expandida para ver detalhes.
-- Botão para criar nova mensagem/alerta.
-- Modal de criação de mensagem: formulário para inserir título, descrição, localização e avatar.
-- Botão para alternar o status do alerta (ativo/resolvido).
-- Modal de confirmação ao alternar status.
-- Botão para deletar mensagem (com confirmação).
-- Feedback visual para ações (sucesso/erro).
-
-### Tela de Diretrizes (Guidelines)
-- Exibe orientações e boas práticas em caso de falta de energia.
-- Conteúdo organizado em seções expansíveis (accordion) para facilitar a leitura.
-- Cada seção traz dicas práticas para antes, durante e após apagões, além de dicas gerais de segurança.
-
-### Tela de Perfil
-- Exibe informações do usuário logado.
-- Permite editar dados pessoais e avatar.
-- Botão para logout.
-
-### Tela de Notificações
-- Lista notificações relevantes sobre novos alertas, atualizações e mensagens do sistema.
-
-### Tela de Configurações
-- Permite ajustar preferências do app, como notificações, tema e privacidade.
-
-### Telas de Autenticação
-- Login, cadastro, recuperação de senha e onboarding.
-- Modais para feedback de sucesso/erro.
+| Tela                | Descrição                                                                 |
+|---------------------|---------------------------------------------------------------------------|
+| **Mapa**            | Visualização de alertas, círculo dinâmico, busca e filtragem.             |
+| **Mensagens**       | Lista de alertas, detalhes, criação e gerenciamento de status.            |
+| **Diretrizes**      | Orientações práticas em caso de apagão, em formato de accordion.           |
+| **Perfil**          | Dados do usuário, edição e logout.                                        |
+| **Notificações**    | Lista de notificações relevantes do sistema.                              |
+| **Configurações**   | Preferências de notificações, privacidade e tema.                         |
+| **Autenticação**    | Login, cadastro, onboarding e recuperação de senha.                       |
 
 ---
 
-## 🗺️ Estrutura do Projeto
+## 🗂️ Estrutura do Projeto
+
 ```
 GlobalSolution2025/
   app/
     (app)/
       map.tsx
       guidelines.tsx
+      notifications.tsx
+      profile.tsx
+      settings.tsx
       ...
     (auth)/
       login.tsx
+      onboarding.tsx
+      register.tsx
       ...
   components/
   contexts/
@@ -108,14 +99,27 @@ GlobalSolution2025/
 
 ---
 
-## 👥 Contribuição
-Sinta-se à vontade para abrir issues, sugerir melhorias ou enviar pull requests!
+## 💡 Diferenciais
+
+- **Design moderno e responsivo**
+- **Experiência mobile-first**
+- **Integração com Supabase**
+- **Notificações em tempo real**
+- **Foco em acessibilidade e usabilidade**
+
+---
+
+## 👥 Contribua!
+
+Sinta-se à vontade para abrir issues, sugerir melhorias ou enviar pull requests.  
+Sua colaboração é muito bem-vinda! 🚀
 
 ---
 
 ## 📝 Licença
+
 Este projeto é open-source e está sob a licença MIT.
 
 ---
 
-Feito com 💙 por Alertaê Team para o Global Solution 2025.
+Feito com 💙 pelo time **Alertaê** para o Global Solution 2025.

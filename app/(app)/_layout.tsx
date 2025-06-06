@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { theme } from '@/lib/theme';
 import { Feather } from '@expo/vector-icons';
-
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import HomeScreen from '@/app/(app)/index';
 import NotificationsScreen from '@/app/(app)/notifications';
@@ -16,6 +16,7 @@ const Tab = createBottomTabNavigator();
 
 export default function AppLayout() {
   const { session } = useAuth();
+  const insets = useSafeAreaInsets();
 
   if (!session) return null;
 
@@ -26,12 +27,12 @@ export default function AppLayout() {
         tabBarActiveTintColor: theme.colors.primary[500],
         tabBarInactiveTintColor: theme.colors.neutrals[400],
         tabBarStyle: {
-          height: 50, 
-          backgroundColor: theme.colors.neutrals[100], 
-          borderTopLeftRadius: 20, 
+          height: 50 + insets.bottom,
+          backgroundColor: theme.colors.neutrals[100],
+          borderTopLeftRadius: 20,
           borderTopRightRadius: 20,
-          paddingBottom: 10, 
-          paddingTop: 5, 
+          paddingBottom: insets.bottom > 0 ? insets.bottom : 10,
+          paddingTop: 5,
         },
         tabBarIcon: ({ color, size }) => {
           let iconName: keyof typeof Feather.glyphMap = 'home';

@@ -10,7 +10,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function SettingsScreen() {
   const [notifications, setNotifications] = React.useState(true);
-  const [darkMode, setDarkMode] = React.useState(false);
 
   // Modais para política e termos
   const [modalVisible, setModalVisible] = React.useState(false);
@@ -143,14 +142,6 @@ export default function SettingsScreen() {
           value: notifications,
           onToggle: handleToggleNotifications,
         },
-        {
-          id: 'darkMode',
-          icon: <Moon size={22} color={theme.colors.primary[500]} />,
-          title: 'Modo escuro',
-          type: 'switch',
-          value: darkMode,
-          onToggle: () => setDarkMode(!darkMode),
-        },
       ],
     },
     {
@@ -202,27 +193,34 @@ export default function SettingsScreen() {
       entering={FadeInDown.delay(100 + index * 50).duration(400)}
       style={styles.settingsItem}
     >
-      <TouchableOpacity
-        style={styles.settingsItemLeft}
-        activeOpacity={item.type === 'link' ? 0.7 : 1}
-        onPress={item.type === 'link' && item.onPress ? item.onPress : undefined}
-        disabled={item.type === 'switch'}
-      >
-        <View style={styles.iconContainer}>{item.icon}</View>
-        <Text style={styles.settingsItemTitle}>{item.title}</Text>
-      </TouchableOpacity>
       {item.type === 'switch' ? (
-        <Switch
-          value={item.value}
-          onValueChange={item.onToggle}
-          trackColor={{
-            false: theme.colors.neutrals[300],
-            true: theme.colors.primary[300],
-          }}
-          thumbColor={item.value ? theme.colors.primary[500] : theme.colors.white}
-        />
+        <>
+          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+            <View style={styles.iconContainer}>{item.icon}</View>
+            <Text style={styles.settingsItemTitle}>{item.title}</Text>
+          </View>
+          <Switch
+            value={item.value}
+            onValueChange={item.onToggle}
+            trackColor={{
+              false: theme.colors.neutrals[300],
+              true: theme.colors.primary[300],
+            }}
+            thumbColor={item.value ? theme.colors.primary[500] : theme.colors.white}
+          />
+        </>
       ) : (
-        <ChevronRight size={20} color={theme.colors.neutrals[400]} />
+        <TouchableOpacity
+          style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}
+          activeOpacity={0.7}
+          onPress={item.onPress}
+        >
+          <View style={styles.iconContainer}>{item.icon}</View>
+          <Text style={styles.settingsItemTitle}>{item.title}</Text>
+          <View style={{ flex: 1, alignItems: 'flex-end' }}>
+            <ChevronRight size={20} color={theme.colors.neutrals[400]} />
+          </View>
+        </TouchableOpacity>
       )}
     </Animated.View>
   );
