@@ -3,6 +3,11 @@
 Bem-vindo ao **Alertaê**!  
 Um sistema inovador para monitoramento, relato e acompanhamento de apagões e alertas de água/energia em tempo real, promovendo colaboração, prevenção e segurança para todos.
 
+
+## 🌊 Video Demonstrativo do Alertaê - Global Solution 2025
+
+https://github.com/user-attachments/assets/cb9e0275-626f-45f5-a7ee-c66ce4491bb4
+
 ---
 
 ## 🚀 Como rodar o projeto localmente
@@ -52,7 +57,7 @@ Um sistema inovador para monitoramento, relato e acompanhamento de apagões e al
 - 📋 **Diretrizes:** Boas práticas em caso de falta de energia, organizadas em seções expansíveis.
 - 👤 **Perfil:** Gerencie seus dados, avatar e preferências.
 - ⚙️ **Configurações:** Ajuste notificações, privacidade e tema.
-- 🔐 **Autenticação:** Login, cadastro, recuperação de senha e onboarding intuitivo.
+- 🔐 **Autenticação:** Login, cadastro e onboarding intuitivo.
 
 ---
 
