@@ -3,6 +3,10 @@
 Bem-vindo ao **Alertaê**!  
 Um sistema inovador para monitoramento, relato e acompanhamento de apagões e alertas de água/energia em tempo real, promovendo colaboração, prevenção e segurança para todos.
 
+## 🤺Integrantes
+- Rm99667 Victor Aranda
+- Rm98690 Julia Lins
+- Rm99210 Luis Barreto
 
 ## 🌊 Video Demonstrativo do Alertaê - Global Solution 2025
 
