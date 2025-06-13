@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, ScrollView, Image, TouchableOpacity } from 'rea
 import { SafeAreaWrapper } from '@/components/ui/SafeAreaWrapper';
 import { useAuth } from '@/contexts/AuthContext';
 import { theme } from '@/lib/theme';
-import { Bell, Search, Calendar, CheckCheck, TrendingUp, Heart, ArrowRight } from 'lucide-react-native';
+import { Bell, Search, Calendar, CheckCheck, TrendingUp, Heart, ArrowRight, Settings } from 'lucide-react-native';
 import Animated, { FadeInDown, FadeInRight } from 'react-native-reanimated';
 import { router } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
@@ -54,14 +54,12 @@ export default function HomeScreen() {
             <Text style={[styles.username]} >{displayName.charAt(0).toUpperCase() + displayName.slice(1).toLowerCase()}</Text>
           </View>
           <View style={styles.headerIcons}>
-            <StockSearchModal
-              visible={isSearchModalVisible}
-              searchText={searchText}
-              onChangeSearchText={setSearchText}
-              onClose={() => setIsSearchModalVisible(false)}
-            />
-
-
+            <TouchableOpacity style={styles.iconButton}
+            // @ts-ignore
+             onPress={() => navigation.navigate('Settings')}
+            >
+              <Settings size={24} color={theme.colors.neutrals[800]} />
+            </TouchableOpacity>
             <TouchableOpacity style={styles.iconButton}
             // @ts-ignore
              onPress={() => navigation.navigate('Notifications')}

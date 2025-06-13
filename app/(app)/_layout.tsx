@@ -51,7 +51,7 @@ export default function AppLayout() {
       <Tab.Screen name="guidelines" component={guidelinesScreen} options={{ headerShown: false }} />
       <Tab.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: false }} />
       <Tab.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
-      <Tab.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
+      <Tab.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false, tabBarButton: () => null, tabBarItemStyle: { display: 'none' } }} />
     </Tab.Navigator>
   );
 }
